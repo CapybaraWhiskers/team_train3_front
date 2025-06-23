@@ -1,0 +1,24 @@
+{
+  "name": "team-train3-front",
+  "version": "1.0.0",
+  "description": "社内勤怠・日報管理アプリ（ローカル開発用フロントエンド）",
+  "private": true,
+  "scripts": {
+    "start": "live-server src --port=3000 --open=./index.html",
+    "copy-vendor": "cp vendor/marked.min.js src/vendor/marked.min.js"
+  },
+  "dependencies": {
+    "marked": "^15.0.12"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  },
+  "keywords": [
+    "attendance",
+    "daily-report",
+    "markdown",
+    "team-train3"
+  ],
+  "author": "Your Name",
+  "license": "ISC"
+}
