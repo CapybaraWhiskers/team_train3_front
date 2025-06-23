@@ -9,7 +9,7 @@
 
 ## ローカルセットアップ
 
-1. `.env` ファイルを作成します。サンプルは以下の通りです。
+1. `.env` ファイルを作成します。サンプルとして `.env.example` を用意しています。
 
    ```env
    FLASK_ENV=development
@@ -77,7 +77,20 @@ curl http://localhost:5000/reports
 └── README.md
 ```
 
+## Azure へのデプロイ
+
+GitHub Actions ワークフロー `.github/workflows/azure.yml` を利用すると、Azure Web App for Containers へデプロイできます。
+
+1. Azure Container Registry と Web App を作成します。
+2. リポジトリの Secrets に以下を登録します。
+   - `AZURE_CREDENTIALS`: `az ad sp create-for-rbac` の出力 JSON
+   - `ACR_USERNAME` / `ACR_PASSWORD`: Container Registry の資格情報
+3. `azure.yml` 内の `AZURE_WEBAPP_NAME` などの変数を環境に合わせて変更します。
+4. `main` ブランチへ push するとイメージがビルドされ Web App へ自動デプロイされます。
+
+Web App 側で `WEBSITES_PORT=5000` を設定しておくと、Flask アプリをそのまま動かせます。
+
 ## 注意事項
 
-本リポジトリはローカル開発用の構成です。**本番環境へのデプロイ設定は後日追加予定** です。
+このリポジトリは主にローカル開発用の構成ですが、上記ワークフローを利用することで簡易的に Azure 環境へ公開することも可能です。
 
