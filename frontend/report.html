@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Report</title>
+    <script src="src/vendor/marked.min.js"></script>
+    <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+    <h1>Daily Report</h1>
+    <nav>
+        <a href="attendance.html">Attendance</a> |
+        <a href="dashboard.html">Dashboard</a> |
+        <a href="#" id="logout">Logout</a>
+    </nav>
+    <section>
+        <textarea id="report-text" rows="10" cols="60" placeholder="Write your report in Markdown..."></textarea><br>
+        <button id="preview">Preview</button>
+        <button id="submit-report">Submit Report</button>
+        <div id="preview-area"></div>
+    </section>
+    <section>
+        <h2>Submitted Reports</h2>
+        <div id="reports"></div>
+    </section>
+    <script src="src/report.js"></script>
+</body>
+</html>
