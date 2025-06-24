@@ -1,14 +1,24 @@
 import os
 import sqlite3
-from datetime import datetime
-from flask import Flask, request, jsonify, send_from_directory
+from datetime import datetime, timedelta
+from functools import wraps
+from flask import (
+    Flask,
+    request,
+    jsonify,
+    send_from_directory,
+    session,
+)
+from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 
 # Load configuration from .env
 load_dotenv()
 DB_PATH = os.environ.get("DB_PATH", "/db/app.db")
+SECRET_KEY = os.environ.get("SECRET_KEY", "demo-secret-key")
 
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
+app.secret_key = SECRET_KEY
 
 # Ensure DB directory exists and initialize tables
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
@@ -21,61 +31,194 @@ def get_db():
 def init_db():
     with get_db() as conn:
         conn.execute(
-            "CREATE TABLE IF NOT EXISTS attendance (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, action TEXT, timestamp TEXT)"
+            """
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT UNIQUE,
+                password TEXT,
+                name TEXT,
+                role TEXT
+            )
+            """
         )
         conn.execute(
-            "CREATE TABLE IF NOT EXISTS reports (id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, content TEXT, timestamp TEXT)"
+            """
+            CREATE TABLE IF NOT EXISTS attendance (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                action TEXT,
+                timestamp TEXT
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS reports (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                content TEXT,
+                timestamp TEXT
+            )
+            """
         )
 
 init_db()
 
-USER = "test-user"
+def require_login(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if "user_id" not in session:
+            return jsonify({"error": "unauthorized"}), 401
+        return f(*args, **kwargs)
+
+    return wrapper
 
 @app.route("/")
 def index():
-    # Serve the frontend index.html
-    return send_from_directory(app.static_folder, "index.html")
+    # Serve the login page
+    return send_from_directory(app.static_folder, "login.html")
+
+
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.get_json() or {}
+    email = data.get("email")
+    password = data.get("password")
+    name = data.get("name")
+    role = data.get("role")
+    if not all([email, password, name, role]):
+        return jsonify({"error": "missing fields"}), 400
+    hashed = generate_password_hash(password)
+    with get_db() as conn:
+        try:
+            conn.execute(
+                "INSERT INTO users (email, password, name, role) VALUES (?, ?, ?, ?)",
+                (email, hashed, name, role),
+            )
+        except sqlite3.IntegrityError:
+            return jsonify({"error": "email exists"}), 400
+    return jsonify({"status": "registered"})
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json() or {}
+    email = data.get("email")
+    password = data.get("password")
+    with get_db() as conn:
+        cur = conn.execute(
+            "SELECT id, password, role FROM users WHERE email=?", (email,)
+        )
+        row = cur.fetchone()
+    if row and check_password_hash(row["password"], password):
+        session["user_id"] = row["id"]
+        session["role"] = row["role"]
+        session["email"] = email
+        return jsonify({"status": "logged_in"})
+    return jsonify({"error": "invalid credentials"}), 401
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return jsonify({"status": "logged_out"})
 
 @app.route("/attendance/clock-in", methods=["POST"])
+@require_login
 def clock_in():
     ts = datetime.utcnow().isoformat()
     with get_db() as conn:
         conn.execute(
-            "INSERT INTO attendance (user, action, timestamp) VALUES (?, 'in', ?)",
-            (USER, ts),
+            "INSERT INTO attendance (user_id, action, timestamp) VALUES (?, 'in', ?)",
+            (session["user_id"], ts),
         )
     return jsonify({"status": "success", "action": "clock-in", "timestamp": ts})
 
 @app.route("/attendance/clock-out", methods=["POST"])
+@require_login
 def clock_out():
     ts = datetime.utcnow().isoformat()
     with get_db() as conn:
         conn.execute(
-            "INSERT INTO attendance (user, action, timestamp) VALUES (?, 'out', ?)",
-            (USER, ts),
+            "INSERT INTO attendance (user_id, action, timestamp) VALUES (?, 'out', ?)",
+            (session["user_id"], ts),
         )
     return jsonify({"status": "success", "action": "clock-out", "timestamp": ts})
 
 @app.route("/report/", methods=["POST"])
+@require_login
 def add_report():
     data = request.get_json() or {}
     content = data.get("content", "")
     ts = datetime.utcnow().isoformat()
     with get_db() as conn:
         conn.execute(
-            "INSERT INTO reports (user, content, timestamp) VALUES (?, ?, ?)",
-            (USER, content, ts),
+            "INSERT INTO reports (user_id, content, timestamp) VALUES (?, ?, ?)",
+            (session["user_id"], content, ts),
         )
     return jsonify({"status": "success", "timestamp": ts})
 
 @app.route("/reports", methods=["GET"])
+@require_login
 def list_reports():
     with get_db() as conn:
-        cur = conn.execute(
-            "SELECT id, user, content, timestamp FROM reports ORDER BY id DESC"
-        )
+        if session.get("role") == "admin":
+            cur = conn.execute(
+                "SELECT id, user_id, content, timestamp FROM reports ORDER BY id DESC"
+            )
+        else:
+            cur = conn.execute(
+                "SELECT id, user_id, content, timestamp FROM reports WHERE user_id=? ORDER BY id DESC",
+                (session["user_id"],),
+            )
         rows = [dict(row) for row in cur.fetchall()]
     return jsonify(rows)
+
+
+def _calculate_monthly_hours(records):
+    records.sort(key=lambda r: r["timestamp"])
+    day_logs = {}
+    for r in records:
+        ts = datetime.fromisoformat(r["timestamp"])
+        day = ts.date()
+        if day not in day_logs:
+            day_logs[day] = {"in": None, "out": None}
+        day_logs[day][r["action"]] = ts
+
+    total = timedelta()
+    for day, v in day_logs.items():
+        if v["in"] and v["out"]:
+            total += v["out"] - v["in"]
+    hours = total.total_seconds() / 3600
+    return hours
+
+
+@app.route("/dashboard", methods=["GET"])
+@require_login
+def dashboard():
+    now = datetime.utcnow()
+    start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0).isoformat()
+    with get_db() as conn:
+        if session.get("role") == "admin":
+            cur = conn.execute(
+                "SELECT user_id, action, timestamp FROM attendance WHERE timestamp >= ?",
+                (start,),
+            )
+            rows = cur.fetchall()
+            user_map = {}
+            for r in rows:
+                user_map.setdefault(r["user_id"], []).append(dict(r))
+            summary = {
+                uid: _calculate_monthly_hours(recs) for uid, recs in user_map.items()
+            }
+        else:
+            cur = conn.execute(
+                "SELECT user_id, action, timestamp FROM attendance WHERE user_id=? AND timestamp >= ?",
+                (session["user_id"], start),
+            )
+            rows = [dict(row) for row in cur.fetchall()]
+            summary = {session["user_id"]: _calculate_monthly_hours(rows)}
+    return jsonify(summary)
 
 if __name__ == "__main__":
     port = int(os.environ.get("API_PORT", 5000))
