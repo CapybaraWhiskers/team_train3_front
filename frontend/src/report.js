@@ -22,6 +22,10 @@ async function loadUserRole() {
     if (info.role) {
         const roleLabel = info.role === 'admin' ? '管理者' : '一般';
         document.getElementById('user-role').textContent = roleLabel;
+        const link = document.getElementById('dashboard-link');
+        if (link) {
+            link.href = info.role === 'admin' ? 'dashboard_admin.html' : 'dashboard_user.html';
+        }
     }
 }
 
