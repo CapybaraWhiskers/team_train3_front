@@ -11,6 +11,17 @@ function showAttendance(msg) {
     document.getElementById('attendance-msg').textContent = msg;
 }
 
+async function loadTodayAttendance() {
+    const data = await apiRequest('/attendance/today');
+    if (data.clock_in && data.clock_out) {
+        showAttendance(`本日の出勤 ${formatTime(data.clock_in)} 退勤 ${formatTime(data.clock_out)}`);
+    } else if (data.clock_in) {
+        showAttendance(`本日の出勤 ${formatTime(data.clock_in)} 退勤 未打刻`);
+    } else {
+        showAttendance('本日の打刻はありません');
+    }
+}
+
 function formatTime(iso) {
     const d = new Date(iso);
     return d.toLocaleString('ja-JP', {
@@ -49,14 +60,14 @@ async function loadMonthlySummary() {
 async function clockIn() {
     const data = await apiRequest('/attendance/clock-in', { method: 'POST' });
     if (data.timestamp) {
-        showAttendance(`出勤: ${formatTime(data.timestamp)}`);
+        await loadTodayAttendance();
     }
 }
 
 async function clockOut() {
     const data = await apiRequest('/attendance/clock-out', { method: 'POST' });
     if (data.timestamp) {
-        showAttendance(`退勤: ${formatTime(data.timestamp)}`);
+        await loadTodayAttendance();
     }
 }
 
@@ -67,4 +78,7 @@ document.getElementById('logout').addEventListener('click', async () => {
     location.href = 'login.html';
 });
 
-loadUserRole().then(loadMonthlySummary);
+loadUserRole().then(() => {
+    loadMonthlySummary();
+    loadTodayAttendance();
+});

@@ -21,7 +21,6 @@ async function loadDashboard() {
         row.className = 'border-t border-t-[#dce0e5]';
         row.innerHTML = `
             <td class="table-column-120 h-[72px] px-4 py-2 w-[400px] text-[#111418] text-sm font-normal leading-normal">${name}</td>
-            <td class="table-column-240 h-[72px] px-4 py-2 w-[400px] text-[#637588] text-sm font-normal leading-normal">N/A</td>
             <td class="table-column-360 h-[72px] px-4 py-2 w-[400px] text-[#637588] text-sm font-normal leading-normal">${hours.toFixed(0)}</td>
             <td class="table-column-480 h-[72px] px-4 py-2 w-[400px] text-sm font-normal leading-normal">
               <div class="flex items-center gap-3">
@@ -55,3 +54,22 @@ document.getElementById('logout').addEventListener('click', async () => {
 
 loadDashboard();
 loadUserRole();
+
+async function exportCsv() {
+    const data = await apiRequest('/dashboard');
+    let csv = 'Employee Name,Total Hours,Utilization Rate\n';
+    Object.keys(data.totals).sort().forEach(name => {
+        const hours = data.totals[name];
+        const utilization = Math.round((hours / 160) * 100);
+        csv += `${name},${hours.toFixed(0)},${utilization}%\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'attendance.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+document.getElementById('export-csv').addEventListener('click', exportCsv);

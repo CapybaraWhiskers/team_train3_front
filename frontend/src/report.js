@@ -30,7 +30,11 @@ async function loadUserRole() {
 }
 
 async function submitReport() {
-    const content = document.getElementById('report-text').value;
+    const content = document.getElementById('report-text').value.trim();
+    if (!content) {
+        alert('日報を入力してください');
+        return;
+    }
     const res = await apiRequest('/report/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -57,6 +61,9 @@ async function loadReports() {
 }
 
 document.getElementById('submit-report').addEventListener('click', submitReport);
+document.getElementById('report-text').addEventListener('input', (e) => {
+    document.getElementById('submit-report').disabled = e.target.value.trim() === '';
+});
 document.getElementById('preview').addEventListener('click', () => {
     const content = document.getElementById('report-text').value;
     document.getElementById('modal-body').innerHTML = marked.parse(content);
@@ -72,3 +79,4 @@ document.getElementById('logout').addEventListener('click', async () => {
 
 loadReports();
 loadUserRole();
+document.getElementById('submit-report').disabled = true;
