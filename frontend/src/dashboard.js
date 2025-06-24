@@ -22,6 +22,22 @@ async function apiRequest(path, options) {
     return res.json();
 }
 
+function renderWeeklyChart(weeks) {
+    const chart = document.getElementById('weekly-chart');
+    chart.innerHTML = '';
+    const max = Math.max(...weeks, 1);
+    weeks.forEach((h, i) => {
+        const bar = document.createElement('div');
+        bar.className = 'border-neutral-500 bg-[#ededed] border-t-2 w-full';
+        bar.style.height = `${(h / max) * 100}%`;
+        chart.appendChild(bar);
+        const label = document.createElement('p');
+        label.className = 'text-neutral-500 text-[13px] font-bold leading-normal tracking-[0.015em]';
+        label.textContent = `Week ${i + 1}`;
+        chart.appendChild(label);
+    });
+}
+
 async function loadDashboard() {
     const data = await apiRequest('/dashboard');
     const container = document.getElementById('dashboard-data');
@@ -61,6 +77,23 @@ async function loadDashboard() {
     });
     table.appendChild(tbody);
     container.appendChild(table);
+
+    // calculate metrics
+    const totalHours = Object.values(data.totals).reduce((a, b) => a + b, 0);
+    document.getElementById('total-hours-value').textContent = totalHours.toFixed(0);
+    document.getElementById('monthly-hours').textContent = `${totalHours.toFixed(0)} hours`;
+
+    const utilization = Math.round((totalHours / 160) * 100);
+    document.getElementById('utilization-rate-value').textContent = utilization + '%';
+
+    // weekly chart
+    const weeks = [0,0,0,0,0];
+    data.records.forEach(r => {
+        const d = new Date(r.clock_in);
+        const week = Math.min(4, Math.floor((d.getDate() - 1) / 7));
+        weeks[week] += r.hours;
+    });
+    renderWeeklyChart(weeks);
 }
 
 async function loadUserRole() {
