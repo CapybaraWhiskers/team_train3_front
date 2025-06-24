@@ -7,7 +7,14 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; }
 .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
          background: rgba(0,0,0,0.5); display: none; justify-content: center;
          align-items: center; }
-.modal-content { background: #fff; padding: 20px; width: 80%; max-width: 600px; max-height: 80vh; overflow: auto; }
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  width: 80%;
+  max-width: 600px;
+  height: 70vh;
+  overflow-y: auto;
+}
 .modal-content h1 { font-size: 1.5em; margin-top: 0.5em; }
 .modal-content h2 { font-size: 1.25em; margin-top: 0.5em; }
 #reports h1, #reports h2 { margin-top: 0.5em; font-weight: bold; }

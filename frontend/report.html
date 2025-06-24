@@ -12,7 +12,8 @@
     <title>日報</title>
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script src="src/vendor/marked.min.js"></script>
+    <!-- Load marked from CDN to ensure markdown parsing works -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="src/style.css" />
   </head>
   <body class="min-h-screen flex flex-col bg-white" style='font-family: Inter, "Noto Sans", sans-serif; margin: 0;'>
