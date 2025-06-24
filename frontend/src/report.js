@@ -7,6 +7,11 @@ async function apiRequest(path, options) {
     return res.json();
 }
 
+// Ensure line breaks are rendered in markdown output
+if (window.marked) {
+    marked.setOptions({ breaks: true });
+}
+
 function formatTime(iso) {
     const d = new Date(iso);
     return d.toLocaleString('ja-JP', {
