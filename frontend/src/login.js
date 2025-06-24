@@ -15,6 +15,6 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     if (res.status === 'logged_in') {
         location.href = 'attendance.html';
     } else {
-        alert(res.error || 'Login failed');
+        alert(res.error || 'ログインに失敗しました');
     }
 });

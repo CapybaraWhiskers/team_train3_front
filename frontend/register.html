@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>ユーザー登録</title>
     <link rel="stylesheet" href="src/style.css">
 </head>
 <body>
-    <h1>Register</h1>
+    <h1>ユーザー登録</h1>
     <form id="register-form">
-        <input type="text" id="name" placeholder="Name" required><br>
-        <input type="email" id="email" placeholder="Email" required><br>
-        <input type="password" id="password" placeholder="Password" required><br>
+        <input type="text" id="name" placeholder="氏名" required><br>
+        <input type="email" id="email" placeholder="メールアドレス" required><br>
+        <input type="password" id="password" placeholder="パスワード" required><br>
         <select id="role">
-            <option value="user">General</option>
-            <option value="admin">Admin</option>
+            <option value="user">一般</option>
+            <option value="admin">管理者</option>
         </select><br>
-        <button type="submit">Create</button>
+        <button type="submit">作成</button>
     </form>
-    <p><a href="login.html">Back to Login</a></p>
+    <p><a href="login.html">ログインへ戻る</a></p>
     <script src="src/register.js"></script>
 </body>
 </html>

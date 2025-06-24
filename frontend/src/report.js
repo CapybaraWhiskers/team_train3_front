@@ -9,15 +9,19 @@ async function apiRequest(path, options) {
 
 function formatTime(iso) {
     const d = new Date(iso);
-    const hh = d.getHours().toString().padStart(2, '0');
-    const mm = d.getMinutes().toString().padStart(2, '0');
-    return `${hh}:${mm}`;
+    return d.toLocaleString('ja-JP', {
+        timeZone: 'Asia/Tokyo',
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 }
 
 async function loadUserRole() {
     const info = await apiRequest('/me');
     if (info.role) {
-        document.getElementById('user-role').textContent = info.role;
+        const roleLabel = info.role === 'admin' ? '管理者' : '一般';
+        document.getElementById('user-role').textContent = roleLabel;
     }
 }
 
@@ -32,7 +36,7 @@ async function submitReport() {
         document.getElementById('report-text').value = '';
         loadReports();
     } else {
-        alert(res.error || 'Failed to submit');
+        alert(res.error || '送信に失敗しました');
     }
 }
 
@@ -51,7 +55,11 @@ async function loadReports() {
 document.getElementById('submit-report').addEventListener('click', submitReport);
 document.getElementById('preview').addEventListener('click', () => {
     const content = document.getElementById('report-text').value;
-    document.getElementById('preview-area').innerHTML = marked.parse(content);
+    document.getElementById('modal-body').innerHTML = marked.parse(content);
+    document.getElementById('preview-modal').style.display = 'flex';
+});
+document.getElementById('close-preview').addEventListener('click', () => {
+    document.getElementById('preview-modal').style.display = 'none';
 });
 document.getElementById('logout').addEventListener('click', async () => {
     await apiRequest('/logout', { method: 'POST' });
