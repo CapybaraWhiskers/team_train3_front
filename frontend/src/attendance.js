@@ -21,9 +21,12 @@ function formatTime(iso) {
     });
 }
 
+let currentName = '';
+
 async function loadUserRole() {
     const info = await apiRequest('/me');
     if (info.role) {
+        currentName = info.name || '';
         const roleLabel = info.role === 'admin' ? '管理者' : '一般';
         document.getElementById('user-role').textContent = roleLabel;
         const link = document.getElementById('dashboard-link');
@@ -31,6 +34,16 @@ async function loadUserRole() {
             link.href = info.role === 'admin' ? 'dashboard_admin.html' : 'dashboard_user.html';
         }
     }
+}
+
+async function loadMonthlySummary() {
+    const data = await apiRequest('/dashboard');
+    if (!data.totals || !currentName) return;
+    const hours = data.totals[currentName];
+    if (hours === undefined) return;
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+    document.getElementById('monthly-hours').textContent = `${h}h ${m}m`;
 }
 
 async function clockIn() {
@@ -54,4 +67,4 @@ document.getElementById('logout').addEventListener('click', async () => {
     location.href = 'login.html';
 });
 
-loadUserRole();
+loadUserRole().then(loadMonthlySummary);
