@@ -13,8 +13,15 @@ async function loadDashboard() {
     container.innerHTML = '';
     for (const [user, hours] of Object.entries(data)) {
         const div = document.createElement('div');
-        div.textContent = `User ${user}: ${hours.toFixed(2)} hours`;
+        div.textContent = `${user}: ${hours.toFixed(2)} hours`;
         container.appendChild(div);
+    }
+}
+
+async function loadUserRole() {
+    const info = await apiRequest('/me');
+    if (info.role) {
+        document.getElementById('user-role').textContent = info.role;
     }
 }
 
@@ -24,3 +31,4 @@ document.getElementById('logout').addEventListener('click', async () => {
 });
 
 loadDashboard();
+loadUserRole();

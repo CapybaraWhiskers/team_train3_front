@@ -107,15 +107,31 @@ def login():
     password = data.get("password")
     with get_db() as conn:
         cur = conn.execute(
-            "SELECT id, password, role FROM users WHERE email=?", (email,)
+            "SELECT id, password, name, role FROM users WHERE email=?",
+            (email,),
         )
         row = cur.fetchone()
     if row and check_password_hash(row["password"], password):
         session["user_id"] = row["id"]
+        session["name"] = row["name"]
         session["role"] = row["role"]
         session["email"] = email
-        return jsonify({"status": "logged_in"})
+        return jsonify(
+            {"status": "logged_in", "name": row["name"], "role": row["role"]}
+        )
     return jsonify({"error": "invalid credentials"}), 401
+
+
+@app.route("/me", methods=["GET"])
+@require_login
+def me():
+    return jsonify(
+        {
+            "id": session.get("user_id"),
+            "name": session.get("name"),
+            "role": session.get("role"),
+        }
+    )
 
 
 @app.route("/logout", methods=["POST"])
@@ -201,23 +217,26 @@ def dashboard():
     with get_db() as conn:
         if session.get("role") == "admin":
             cur = conn.execute(
-                "SELECT user_id, action, timestamp FROM attendance WHERE timestamp >= ?",
+                "SELECT a.user_id, u.name, a.action, a.timestamp FROM attendance a JOIN users u ON a.user_id = u.id WHERE a.timestamp >= ?",
                 (start,),
             )
             rows = cur.fetchall()
             user_map = {}
             for r in rows:
-                user_map.setdefault(r["user_id"], []).append(dict(r))
+                key = (r["user_id"], r["name"])
+                user_map.setdefault(key, []).append(dict(r))
             summary = {
-                uid: _calculate_monthly_hours(recs) for uid, recs in user_map.items()
+                name: _calculate_monthly_hours(recs)
+                for (_, name), recs in user_map.items()
             }
         else:
             cur = conn.execute(
-                "SELECT user_id, action, timestamp FROM attendance WHERE user_id=? AND timestamp >= ?",
+                "SELECT a.user_id, u.name, a.action, a.timestamp FROM attendance a JOIN users u ON a.user_id = u.id WHERE a.user_id=? AND a.timestamp >= ?",
                 (session["user_id"], start),
             )
             rows = [dict(row) for row in cur.fetchall()]
-            summary = {session["user_id"]: _calculate_monthly_hours(rows)}
+            name = rows[0]["name"] if rows else session.get("name")
+            summary = {name: _calculate_monthly_hours(rows)}
     return jsonify(summary)
 
 if __name__ == "__main__":
