@@ -26,28 +26,35 @@ async function loadDashboard() {
     const data = await apiRequest('/dashboard');
     const container = document.getElementById('dashboard-data');
     container.innerHTML = '';
+
     const table = document.createElement('table');
+    table.className = 'min-w-full text-sm';
+
     let header = '<tr>';
     if (currentRole === 'admin') {
-        header += '<th>ユーザー名</th>';
+        header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">ユーザー名</th>';
     }
-    header += '<th>出勤日時</th><th>退勤日時</th><th>勤務時間</th>';
+    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">出勤日時</th>';
+    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">退勤日時</th>';
+    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">勤務時間</th>';
     if (currentRole === 'admin') {
-        header += '<th>当月総計</th>';
+        header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">当月総計</th>';
     }
     header += '</tr>';
+
     table.innerHTML = '<thead>' + header + '</thead>';
+
     const tbody = document.createElement('tbody');
     data.records.forEach(rec => {
-        let row = '<tr>';
+        let row = '<tr class="border-t border-[#dce0e5]">';
         if (currentRole === 'admin') {
-            row += `<td>${rec.name}</td>`;
+            row += `<td class="px-4 py-2 text-[#111418]">${rec.name}</td>`;
         }
-        row += `<td>${formatDateTime(rec.clock_in)}</td>`;
-        row += `<td>${formatDateTime(rec.clock_out)}</td>`;
-        row += `<td>${rec.hours.toFixed(2)}</td>`;
+        row += `<td class="px-4 py-2 text-[#637588]">${formatDateTime(rec.clock_in)}</td>`;
+        row += `<td class="px-4 py-2 text-[#637588]">${formatDateTime(rec.clock_out)}</td>`;
+        row += `<td class="px-4 py-2 text-[#637588]">${rec.hours.toFixed(2)}</td>`;
         if (currentRole === 'admin') {
-            row += `<td>${data.totals[rec.name].toFixed(2)}</td>`;
+            row += `<td class="px-4 py-2 text-[#111418]">${data.totals[rec.name].toFixed(2)}</td>`;
         }
         row += '</tr>';
         tbody.innerHTML += row;
