@@ -13,29 +13,33 @@ function showAttendance(msg) {
 
 function formatTime(iso) {
     const d = new Date(iso);
-    const hh = d.getHours().toString().padStart(2, '0');
-    const mm = d.getMinutes().toString().padStart(2, '0');
-    return `${hh}:${mm}`;
+    return d.toLocaleString('ja-JP', {
+        timeZone: 'Asia/Tokyo',
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 }
 
 async function loadUserRole() {
     const info = await apiRequest('/me');
     if (info.role) {
-        document.getElementById('user-role').textContent = info.role;
+        const roleLabel = info.role === 'admin' ? '管理者' : '一般';
+        document.getElementById('user-role').textContent = roleLabel;
     }
 }
 
 async function clockIn() {
     const data = await apiRequest('/attendance/clock-in', { method: 'POST' });
     if (data.timestamp) {
-        showAttendance(`Clocked in at ${formatTime(data.timestamp)}`);
+        showAttendance(`出勤: ${formatTime(data.timestamp)}`);
     }
 }
 
 async function clockOut() {
     const data = await apiRequest('/attendance/clock-out', { method: 'POST' });
     if (data.timestamp) {
-        showAttendance(`Clocked out at ${formatTime(data.timestamp)}`);
+        showAttendance(`退勤: ${formatTime(data.timestamp)}`);
     }
 }
 

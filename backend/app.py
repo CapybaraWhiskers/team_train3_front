@@ -1,6 +1,7 @@
 import os
 import sqlite3
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 from functools import wraps
 from flask import (
     Flask,
@@ -142,7 +143,7 @@ def logout():
 @app.route("/attendance/clock-in", methods=["POST"])
 @require_login
 def clock_in():
-    ts = datetime.utcnow().isoformat()
+    ts = datetime.now(ZoneInfo("Asia/Tokyo")).isoformat()
     with get_db() as conn:
         conn.execute(
             "INSERT INTO attendance (user_id, action, timestamp) VALUES (?, 'in', ?)",
@@ -153,7 +154,7 @@ def clock_in():
 @app.route("/attendance/clock-out", methods=["POST"])
 @require_login
 def clock_out():
-    ts = datetime.utcnow().isoformat()
+    ts = datetime.now(ZoneInfo("Asia/Tokyo")).isoformat()
     with get_db() as conn:
         conn.execute(
             "INSERT INTO attendance (user_id, action, timestamp) VALUES (?, 'out', ?)",
@@ -166,7 +167,7 @@ def clock_out():
 def add_report():
     data = request.get_json() or {}
     content = data.get("content", "")
-    ts = datetime.utcnow().isoformat()
+    ts = datetime.now(ZoneInfo("Asia/Tokyo")).isoformat()
     with get_db() as conn:
         conn.execute(
             "INSERT INTO reports (user_id, content, timestamp) VALUES (?, ?, ?)",
@@ -212,32 +213,44 @@ def _calculate_monthly_hours(records):
 @app.route("/dashboard", methods=["GET"])
 @require_login
 def dashboard():
-    now = datetime.utcnow()
+    tz = ZoneInfo("Asia/Tokyo")
+    now = datetime.now(tz)
     start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0).isoformat()
     with get_db() as conn:
         if session.get("role") == "admin":
             cur = conn.execute(
-                "SELECT a.user_id, u.name, a.action, a.timestamp FROM attendance a JOIN users u ON a.user_id = u.id WHERE a.timestamp >= ?",
+                "SELECT a.user_id, u.name, a.action, a.timestamp FROM attendance a JOIN users u ON a.user_id = u.id WHERE a.timestamp >= ? ORDER BY a.user_id, a.timestamp",
                 (start,),
             )
-            rows = cur.fetchall()
-            user_map = {}
-            for r in rows:
-                key = (r["user_id"], r["name"])
-                user_map.setdefault(key, []).append(dict(r))
-            summary = {
-                name: _calculate_monthly_hours(recs)
-                for (_, name), recs in user_map.items()
-            }
         else:
             cur = conn.execute(
-                "SELECT a.user_id, u.name, a.action, a.timestamp FROM attendance a JOIN users u ON a.user_id = u.id WHERE a.user_id=? AND a.timestamp >= ?",
+                "SELECT a.user_id, u.name, a.action, a.timestamp FROM attendance a JOIN users u ON a.user_id = u.id WHERE a.user_id=? AND a.timestamp >= ? ORDER BY a.timestamp",
                 (session["user_id"], start),
             )
-            rows = [dict(row) for row in cur.fetchall()]
-            name = rows[0]["name"] if rows else session.get("name")
-            summary = {name: _calculate_monthly_hours(rows)}
-    return jsonify(summary)
+        rows = [dict(row) for row in cur.fetchall()]
+
+    records = []
+    totals = {}
+    day_map = {}
+    for r in rows:
+        ts = datetime.fromisoformat(r["timestamp"])
+        key = (r["user_id"], ts.date())
+        entry = day_map.setdefault(key, {"name": r["name"], "in": None, "out": None})
+        entry[r["action"]] = ts
+
+    for (uid, day), entry in day_map.items():
+        if entry["in"] and entry["out"]:
+            hours = (entry["out"] - entry["in"]).total_seconds() / 3600
+            totals[entry["name"]] = totals.get(entry["name"], 0) + hours
+            records.append({
+                "name": entry["name"],
+                "clock_in": entry["in"].isoformat(),
+                "clock_out": entry["out"].isoformat(),
+                "hours": hours,
+            })
+
+    records.sort(key=lambda r: r["clock_in"])
+    return jsonify({"records": records, "totals": totals})
 
 if __name__ == "__main__":
     port = int(os.environ.get("API_PORT", 5000))

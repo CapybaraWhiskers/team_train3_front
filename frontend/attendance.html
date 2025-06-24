@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Attendance</title>
+    <title>勤怠管理</title>
     <script src="src/vendor/marked.min.js"></script>
     <link rel="stylesheet" href="src/style.css">
 </head>
 <body>
-    <h1>Attendance & Daily Report</h1>
+    <h1>勤怠管理</h1>
+    <span id="user-role" class="role-label"></span>
     <nav>
-        <a href="report.html">Report</a> |
-        <a href="dashboard.html">Dashboard</a> |
-        <a href="#" id="logout">Logout</a>
-        <span id="user-role" class="role-label"></span>
+        <a href="report.html">日報</a> |
+        <a href="dashboard.html">ダッシュボード</a> |
+        <a href="#" id="logout">ログアウト</a>
     </nav>
     <section>
-        <button id="clock-in">Clock In</button>
-        <button id="clock-out">Clock Out</button>
+        <button id="clock-in">出勤</button>
+        <button id="clock-out">退勤</button>
         <div id="attendance-msg"></div>
     </section>
     <script src="src/attendance.js"></script>

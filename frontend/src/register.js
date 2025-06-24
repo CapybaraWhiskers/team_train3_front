@@ -15,9 +15,9 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
         body: JSON.stringify({ name, email, password, role })
     });
     if (res.status === 'registered') {
-        alert('Registered! Please login.');
+        alert('登録完了！ログインしてください。');
         location.href = 'login.html';
     } else {
-        alert(res.error || 'Registration failed');
+        alert(res.error || '登録に失敗しました');
     }
 });
