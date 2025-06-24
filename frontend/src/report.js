@@ -7,6 +7,20 @@ async function apiRequest(path, options) {
     return res.json();
 }
 
+function formatTime(iso) {
+    const d = new Date(iso);
+    const hh = d.getHours().toString().padStart(2, '0');
+    const mm = d.getMinutes().toString().padStart(2, '0');
+    return `${hh}:${mm}`;
+}
+
+async function loadUserRole() {
+    const info = await apiRequest('/me');
+    if (info.role) {
+        document.getElementById('user-role').textContent = info.role;
+    }
+}
+
 async function submitReport() {
     const content = document.getElementById('report-text').value;
     const res = await apiRequest('/report/', {
@@ -29,7 +43,7 @@ async function loadReports() {
     if (!Array.isArray(reports)) return;
     reports.forEach(r => {
         const div = document.createElement('div');
-        div.innerHTML = `<strong>${r.timestamp}</strong><div>` + marked.parse(r.content) + '</div>';
+        div.innerHTML = `<strong>${formatTime(r.timestamp)}</strong><div>` + marked.parse(r.content) + '</div>';
         container.appendChild(div);
     });
 }
@@ -45,3 +59,4 @@ document.getElementById('logout').addEventListener('click', async () => {
 });
 
 loadReports();
+loadUserRole();

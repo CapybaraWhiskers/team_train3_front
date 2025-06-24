@@ -1,3 +1,4 @@
 body { font-family: Arial, sans-serif; margin: 20px; }
 #attendance-msg { margin-top: 10px; font-weight: bold; }
 #reports div { border-bottom: 1px solid #ccc; padding: 10px 0; }
+.role-label { font-size: 0.8em; color: #555; margin-left: 8px; }
