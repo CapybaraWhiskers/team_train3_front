@@ -17,7 +17,7 @@
   <body>
     <div class="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style='font-family: Inter, "Noto Sans", sans-serif;'>
       <div class="layout-container flex h-full grow flex-col">
-        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f4] px-10 py-3">
+        <header class="flex items-center justify-between border-b border-[#f0f2f4] px-10 py-3">
           <div class="flex items-center gap-4 text-[#111418]">
             <div class="size-4">
               <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,17 +31,14 @@
             </div>
             <h2 class="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em]">WorkWise</h2>
           </div>
-          <div class="flex flex-1 justify-end gap-8">
+          <div class="flex flex-1 justify-end gap-8 items-center">
+            <span id="user-role" class="role-label"></span>
             <div class="flex items-center gap-9">
-              <a class="text-[#111418] text-sm font-medium leading-normal" href="attendance.html">Attendance</a>
-              <a class="text-[#111418] text-sm font-medium leading-normal" href="dashboard_admin.html">Dashboard</a>
-              <a class="text-[#111418] text-sm font-medium leading-normal" href="report.html">Reports</a>
+              <a class="text-[#111418] text-sm font-medium" href="attendance.html">Attendance</a>
+              <a class="text-[#111418] text-sm font-medium" href="dashboard_admin.html">Dashboard</a>
+              <a class="text-[#111418] text-sm font-medium" href="report.html">Reports</a>
             </div>
-            <div
-              class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-              style='background-image: url("https://lh3.googleusercontent.com/a-/ACB-R5Q5")'
-            ></div>
-            <a id="logout" class="text-[#111418] text-sm font-medium leading-normal" href="#">Logout</a>
+            <a id="logout" class="text-[#111418] text-sm font-medium" href="#">Logout</a>
           </div>
         </header>
         <div class="px-40 flex flex-1 justify-center py-5">

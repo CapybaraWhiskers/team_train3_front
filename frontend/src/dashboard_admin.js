@@ -14,14 +14,18 @@ async function loadDashboard() {
     const tbody = document.getElementById('attendance-body');
     tbody.innerHTML = '';
 
+    const target = getMonthlyTargetHours();
+
     Object.keys(data.totals).sort().forEach(name => {
         const hours = data.totals[name];
-        const utilization = Math.round((hours / 160) * 100);
+        const utilization = Math.round((hours / target) * 100);
         const row = document.createElement('tr');
         row.className = 'border-t border-t-[#dce0e5]';
+        const h = Math.floor(hours);
+        const m = Math.round((hours - h) * 60);
         row.innerHTML = `
             <td class="table-column-120 h-[72px] px-4 py-2 w-[400px] text-[#111418] text-sm font-normal leading-normal">${name}</td>
-            <td class="table-column-360 h-[72px] px-4 py-2 w-[400px] text-[#637588] text-sm font-normal leading-normal">${hours.toFixed(0)}</td>
+            <td class="table-column-360 h-[72px] px-4 py-2 w-[400px] text-[#637588] text-sm font-normal leading-normal">${h}h ${m}m</td>
             <td class="table-column-480 h-[72px] px-4 py-2 w-[400px] text-sm font-normal leading-normal">
               <div class="flex items-center gap-3">
                 <div class="w-[88px] overflow-hidden rounded-sm bg-[#dce0e5]">
@@ -32,6 +36,18 @@ async function loadDashboard() {
             </td>`;
         tbody.appendChild(row);
     });
+}
+
+function getMonthlyTargetHours() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    let weekdays = 0;
+    for (let d = new Date(year, month, 1); d.getMonth() === month; d.setDate(d.getDate() + 1)) {
+        const day = d.getDay();
+        if (day !== 0 && day !== 6) weekdays++;
+    }
+    return weekdays * 8;
 }
 
 /* Legacy dashboard widgets were removed. */
@@ -60,8 +76,10 @@ async function exportCsv() {
     let csv = 'Employee Name,Total Hours,Utilization Rate\n';
     Object.keys(data.totals).sort().forEach(name => {
         const hours = data.totals[name];
-        const utilization = Math.round((hours / 160) * 100);
-        csv += `${name},${hours.toFixed(0)},${utilization}%\n`;
+        const utilization = Math.round((hours / getMonthlyTargetHours()) * 100);
+        const h = Math.floor(hours);
+        const m = Math.round((hours - h) * 60);
+        csv += `${name},${h}h ${m}m,${utilization}%\n`;
     });
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);

@@ -208,11 +208,15 @@ def list_reports():
     with get_db() as conn:
         if session.get("role") == "admin":
             cur = conn.execute(
-                "SELECT id, user_id, content, timestamp FROM reports ORDER BY id DESC"
+                "SELECT r.id, r.user_id, u.name, r.content, r.timestamp "
+                "FROM reports r JOIN users u ON r.user_id = u.id "
+                "ORDER BY r.id DESC"
             )
         else:
             cur = conn.execute(
-                "SELECT id, user_id, content, timestamp FROM reports WHERE user_id=? ORDER BY id DESC",
+                "SELECT r.id, r.user_id, u.name, r.content, r.timestamp "
+                "FROM reports r JOIN users u ON r.user_id = u.id "
+                "WHERE r.user_id=? ORDER BY r.id DESC",
                 (session["user_id"],),
             )
         rows = [dict(row) for row in cur.fetchall()]
