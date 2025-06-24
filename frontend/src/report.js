@@ -11,6 +11,9 @@ function formatTime(iso) {
     const d = new Date(iso);
     return d.toLocaleString('ja-JP', {
         timeZone: 'Asia/Tokyo',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
         hour12: false,
         hour: '2-digit',
         minute: '2-digit'
@@ -55,7 +58,10 @@ async function loadReports() {
     if (!Array.isArray(reports)) return;
     reports.forEach(r => {
         const div = document.createElement('div');
-        div.innerHTML = `<strong>${formatTime(r.timestamp)}</strong><div>` + marked.parse(r.content) + '</div>';
+        const time = formatTime(r.timestamp);
+        const name = r.name || '';
+        div.innerHTML = `<strong>${name}</strong> <span class="text-sm text-[#637588]">${time}</span><div>` +
+            marked.parse(r.content) + '</div>';
         container.appendChild(div);
     });
 }

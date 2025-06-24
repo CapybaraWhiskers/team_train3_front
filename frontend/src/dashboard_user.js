@@ -38,6 +38,18 @@ function renderWeeklyChart(weeks) {
     });
 }
 
+function getMonthlyTargetHours() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    let weekdays = 0;
+    for (let d = new Date(year, month, 1); d.getMonth() === month; d.setDate(d.getDate() + 1)) {
+        const day = d.getDay();
+        if (day !== 0 && day !== 6) weekdays++;
+    }
+    return weekdays * 8;
+}
+
 async function loadDashboard() {
     const data = await apiRequest('/dashboard');
     const container = document.getElementById('dashboard-data');
@@ -68,9 +80,14 @@ async function loadDashboard() {
         }
         row += `<td class="px-4 py-2 text-[#637588]">${formatDateTime(rec.clock_in)}</td>`;
         row += `<td class="px-4 py-2 text-[#637588]">${formatDateTime(rec.clock_out)}</td>`;
-        row += `<td class="px-4 py-2 text-[#637588]">${rec.hours.toFixed(2)}</td>`;
+        const h = Math.floor(rec.hours);
+        const m = Math.round((rec.hours - h) * 60);
+        row += `<td class="px-4 py-2 text-[#637588]">${h}h ${m}m</td>`;
         if (currentRole === 'admin') {
-            row += `<td class="px-4 py-2 text-[#111418]">${data.totals[rec.name].toFixed(2)}</td>`;
+            const total = data.totals[rec.name];
+            const th = Math.floor(total);
+            const tm = Math.round((total - th) * 60);
+            row += `<td class="px-4 py-2 text-[#111418]">${th}h ${tm}m</td>`;
         }
         row += '</tr>';
         tbody.innerHTML += row;
@@ -80,10 +97,13 @@ async function loadDashboard() {
 
     // calculate metrics
     const totalHours = Object.values(data.totals).reduce((a, b) => a + b, 0);
-    document.getElementById('total-hours-value').textContent = totalHours.toFixed(0);
-    document.getElementById('monthly-hours').textContent = `${totalHours.toFixed(0)} hours`;
+    const th = Math.floor(totalHours);
+    const tm = Math.round((totalHours - th) * 60);
+    document.getElementById('total-hours-value').textContent = `${th}h ${tm}m`;
+    document.getElementById('monthly-hours').textContent = `${th}h ${tm}m`;
 
-    const utilization = Math.round((totalHours / 160) * 100);
+    const target = getMonthlyTargetHours();
+    const utilization = Math.round((totalHours / target) * 100);
     document.getElementById('utilization-rate-value').textContent = utilization + '%';
 
     // weekly chart
