@@ -1,18 +1,5 @@
 let currentRole = 'admin';
 
-function formatDateTime(iso) {
-    const d = new Date(iso);
-    return d.toLocaleString('ja-JP', {
-        timeZone: 'Asia/Tokyo',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    });
-}
-
 async function apiRequest(path, options) {
     const res = await fetch(path, options);
     if (res.status === 401) {
@@ -22,79 +9,33 @@ async function apiRequest(path, options) {
     return res.json();
 }
 
-function renderWeeklyChart(weeks) {
-    const chart = document.getElementById('weekly-chart');
-    chart.innerHTML = '';
-    const max = Math.max(...weeks, 1);
-    weeks.forEach((h, i) => {
-        const bar = document.createElement('div');
-        bar.className = 'border-neutral-500 bg-[#ededed] border-t-2 w-full';
-        bar.style.height = `${(h / max) * 100}%`;
-        chart.appendChild(bar);
-        const label = document.createElement('p');
-        label.className = 'text-neutral-500 text-[13px] font-bold leading-normal tracking-[0.015em]';
-        label.textContent = `Week ${i + 1}`;
-        chart.appendChild(label);
-    });
-}
-
 async function loadDashboard() {
     const data = await apiRequest('/dashboard');
-    const container = document.getElementById('dashboard-data');
-    container.innerHTML = '';
+    const tbody = document.getElementById('attendance-body');
+    tbody.innerHTML = '';
 
-    const table = document.createElement('table');
-    table.className = 'min-w-full text-sm';
-
-    let header = '<tr>';
-    if (currentRole === 'admin') {
-        header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">ユーザー名</th>';
-    }
-    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">出勤日時</th>';
-    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">退勤日時</th>';
-    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">勤務時間</th>';
-    if (currentRole === 'admin') {
-        header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">当月総計</th>';
-    }
-    header += '</tr>';
-
-    table.innerHTML = '<thead>' + header + '</thead>';
-
-    const tbody = document.createElement('tbody');
-    data.records.forEach(rec => {
-        let row = '<tr class="border-t border-[#dce0e5]">';
-        if (currentRole === 'admin') {
-            row += `<td class="px-4 py-2 text-[#111418]">${rec.name}</td>`;
-        }
-        row += `<td class="px-4 py-2 text-[#637588]">${formatDateTime(rec.clock_in)}</td>`;
-        row += `<td class="px-4 py-2 text-[#637588]">${formatDateTime(rec.clock_out)}</td>`;
-        row += `<td class="px-4 py-2 text-[#637588]">${rec.hours.toFixed(2)}</td>`;
-        if (currentRole === 'admin') {
-            row += `<td class="px-4 py-2 text-[#111418]">${data.totals[rec.name].toFixed(2)}</td>`;
-        }
-        row += '</tr>';
-        tbody.innerHTML += row;
+    Object.keys(data.totals).sort().forEach(name => {
+        const hours = data.totals[name];
+        const utilization = Math.round((hours / 160) * 100);
+        const row = document.createElement('tr');
+        row.className = 'border-t border-t-[#dce0e5]';
+        row.innerHTML = `
+            <td class="table-column-120 h-[72px] px-4 py-2 w-[400px] text-[#111418] text-sm font-normal leading-normal">${name}</td>
+            <td class="table-column-240 h-[72px] px-4 py-2 w-[400px] text-[#637588] text-sm font-normal leading-normal">N/A</td>
+            <td class="table-column-360 h-[72px] px-4 py-2 w-[400px] text-[#637588] text-sm font-normal leading-normal">${hours.toFixed(0)}</td>
+            <td class="table-column-480 h-[72px] px-4 py-2 w-[400px] text-sm font-normal leading-normal">
+              <div class="flex items-center gap-3">
+                <div class="w-[88px] overflow-hidden rounded-sm bg-[#dce0e5]">
+                  <div class="h-1 rounded-full bg-[#111418]" style="width: ${Math.min(utilization,100)}%;"></div>
+                </div>
+                <p class="text-[#111418] text-sm font-medium leading-normal">${utilization}</p>
+              </div>
+            </td>`;
+        tbody.appendChild(row);
     });
-    table.appendChild(tbody);
-    container.appendChild(table);
-
-    // calculate metrics
-    const totalHours = Object.values(data.totals).reduce((a, b) => a + b, 0);
-    document.getElementById('total-hours-value').textContent = totalHours.toFixed(0);
-    document.getElementById('monthly-hours').textContent = `${totalHours.toFixed(0)} hours`;
-
-    const utilization = Math.round((totalHours / 160) * 100);
-    document.getElementById('utilization-rate-value').textContent = utilization + '%';
-
-    // weekly chart
-    const weeks = [0,0,0,0,0];
-    data.records.forEach(r => {
-        const d = new Date(r.clock_in);
-        const week = Math.min(4, Math.floor((d.getDate() - 1) / 7));
-        weeks[week] += r.hours;
-    });
-    renderWeeklyChart(weeks);
 }
+
+/* Legacy dashboard widgets were removed. */
 
 async function loadUserRole() {
     const info = await apiRequest('/me');
