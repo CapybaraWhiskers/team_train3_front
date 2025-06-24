@@ -162,6 +162,33 @@ def clock_out():
         )
     return jsonify({"status": "success", "action": "clock-out", "timestamp": ts})
 
+
+@app.route("/attendance/today", methods=["GET"])
+@require_login
+def attendance_today():
+    tz = ZoneInfo("Asia/Tokyo")
+    now = datetime.now(tz)
+    start = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+    with get_db() as conn:
+        cur = conn.execute(
+            "SELECT action, timestamp FROM attendance WHERE user_id=? AND timestamp >= ? ORDER BY timestamp",
+            (session["user_id"], start),
+        )
+        rows = [dict(row) for row in cur.fetchall()]
+
+    last_in = None
+    last_out = None
+    current_in = None
+    for r in rows:
+        if r["action"] == "in":
+            current_in = r["timestamp"]
+        elif r["action"] == "out" and current_in:
+            last_in = current_in
+            last_out = r["timestamp"]
+            current_in = None
+
+    return jsonify({"clock_in": last_in, "clock_out": last_out})
+
 @app.route("/report/", methods=["POST"])
 @require_login
 def add_report():

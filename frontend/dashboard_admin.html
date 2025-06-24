@@ -60,9 +60,6 @@
                       <th class="table-column-120 px-4 py-3 text-left text-[#111418] w-[400px] text-sm font-medium leading-normal">
                         Employee Name
                       </th>
-                      <th class="table-column-240 px-4 py-3 text-left text-[#111418] w-[400px] text-sm font-medium leading-normal">
-                        Department
-                      </th>
                       <th class="table-column-360 px-4 py-3 text-left text-[#111418] w-[400px] text-sm font-medium leading-normal">
                         Total Hours
                       </th>
@@ -76,13 +73,13 @@
               </div>
               <style>
                 @container(max-width:120px){.table-column-120{display: none;}}
-                @container(max-width:240px){.table-column-240{display: none;}}
                 @container(max-width:360px){.table-column-360{display: none;}}
                 @container(max-width:480px){.table-column-480{display: none;}}
               </style>
             </div>
             <div class="flex px-4 py-3 justify-end">
               <button
+                id="export-csv"
                 class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f2f4] text-[#111418] text-sm font-bold leading-normal tracking-[0.015em]"
               >
                 <span class="truncate">Export to CSV</span>
