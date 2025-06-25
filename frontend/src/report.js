@@ -9,7 +9,7 @@ async function apiRequest(path, options) {
 
 // Ensure line breaks are rendered in markdown output
 if (window.marked) {
-    marked.setOptions({ breaks: true });
+    marked.setOptions({ gfm: true, breaks: true });
 }
 
 function formatTime(iso) {
