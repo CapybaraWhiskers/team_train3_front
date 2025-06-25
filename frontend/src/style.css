@@ -15,9 +15,11 @@ th, td { border: 1px solid #ccc; padding: 4px 8px; }
   height: 70vh;
   overflow-y: auto;
 }
+#reports h1 { font-size: 1.5em; margin-top: 0.5em; font-weight: bold; }
+#reports h2 { font-size: 1.25em; margin-top: 0.5em; font-weight: bold; }
+#reports h3 { font-size: 1.1em; margin-top: 0.5em; font-weight: bold; }
 .modal-content h1 { font-size: 1.5em; margin-top: 0.5em; }
 .modal-content h2 { font-size: 1.25em; margin-top: 0.5em; }
-#reports h1, #reports h2 { margin-top: 0.5em; font-weight: bold; }
 #reports ul, #modal-body ul { list-style: disc; margin-left: 1.5em; }
 #reports ol, #modal-body ol { list-style: decimal; margin-left: 1.5em; }
 .close-button { cursor: pointer; float: right; }

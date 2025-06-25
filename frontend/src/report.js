@@ -58,13 +58,20 @@ async function submitReport() {
 
 let allReports = [];
 
-function renderReportsForDate() {
+function renderReportsForRange() {
     const container = document.getElementById('reports');
     container.innerHTML = '';
-    const dateStr = document.getElementById('report-date').value;
+    const startStr = document.getElementById('report-start').value;
+    const endStr = document.getElementById('report-end').value;
+    const start = startStr ? new Date(startStr) : null;
+    const end = endStr ? new Date(endStr) : null;
+    if (end) {
+        end.setDate(end.getDate() + 1);
+    }
     if (!Array.isArray(allReports)) return;
     allReports.forEach(r => {
-        if (!dateStr || r.timestamp.startsWith(dateStr)) {
+        const ts = new Date(r.timestamp);
+        if ((!start || ts >= start) && (!end || ts < end)) {
             const div = document.createElement('div');
             const time = formatTime(r.timestamp);
             const name = r.name || '';
@@ -77,7 +84,7 @@ function renderReportsForDate() {
 
 async function loadReports() {
     allReports = await apiRequest('/reports');
-    renderReportsForDate();
+    renderReportsForRange();
 }
 
 document.getElementById('submit-report').addEventListener('click', submitReport);
@@ -97,10 +104,16 @@ document.getElementById('logout').addEventListener('click', async () => {
     location.href = 'login.html';
 });
 
-const dateInput = document.getElementById('report-date');
-if (dateInput) {
-    dateInput.value = new Date().toISOString().slice(0, 10);
-    dateInput.addEventListener('change', renderReportsForDate);
+const startInput = document.getElementById('report-start');
+const endInput = document.getElementById('report-end');
+if (startInput && endInput) {
+    const today = new Date();
+    const weekAgo = new Date();
+    weekAgo.setDate(today.getDate() - 7);
+    startInput.value = weekAgo.toISOString().slice(0, 10);
+    endInput.value = today.toISOString().slice(0, 10);
+    startInput.addEventListener('change', renderReportsForRange);
+    endInput.addEventListener('change', renderReportsForRange);
 }
 
 loadReports();
