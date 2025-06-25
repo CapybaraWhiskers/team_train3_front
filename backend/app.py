@@ -65,6 +65,29 @@ def init_db():
 
 init_db()
 
+
+def column_exists(conn, table, column):
+    cur = conn.execute(f"PRAGMA table_info({table})")
+    return any(row[1] == column for row in cur.fetchall())
+
+
+def migrate_db():
+    with get_db() as conn:
+        if not column_exists(conn, "attendance", "user_id"):
+            conn.execute("ALTER TABLE attendance ADD COLUMN user_id INTEGER")
+
+        if not column_exists(conn, "reports", "user_id"):
+            conn.execute("ALTER TABLE reports ADD COLUMN user_id INTEGER")
+
+        if not column_exists(conn, "users", "name"):
+            conn.execute("ALTER TABLE users ADD COLUMN name TEXT")
+
+        if not column_exists(conn, "users", "role"):
+            conn.execute("ALTER TABLE users ADD COLUMN role TEXT")
+
+
+migrate_db()
+
 def require_login(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
