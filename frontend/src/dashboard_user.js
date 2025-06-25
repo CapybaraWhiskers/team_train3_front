@@ -2,7 +2,7 @@ let currentRole = 'user';
 
 function formatDateTime(iso) {
     const d = new Date(iso);
-    return d.toLocaleString('ja-JP', {
+    return d.toLocaleString('en-US', {
         timeZone: 'Asia/Tokyo',
         year: 'numeric',
         month: '2-digit',
@@ -60,13 +60,13 @@ async function loadDashboard() {
 
     let header = '<tr>';
     if (currentRole === 'admin') {
-        header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">ユーザー名</th>';
+        header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">Employee Name</th>';
     }
-    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">出勤日時</th>';
-    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">退勤日時</th>';
-    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">勤務時間</th>';
+    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">Clock In</th>';
+    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">Clock Out</th>';
+    header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">Hours Worked</th>';
     if (currentRole === 'admin') {
-        header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">当月総計</th>';
+        header += '<th class="px-4 py-3 text-left text-[#111418] font-medium">Monthly Total</th>';
     }
     header += '</tr>';
 
@@ -123,7 +123,7 @@ async function loadUserRole() {
             location.href = 'dashboard_admin.html';
             return;
         }
-        document.getElementById('user-role').textContent = '一般';
+        document.getElementById('user-role').textContent = 'User';
     }
 }
 
