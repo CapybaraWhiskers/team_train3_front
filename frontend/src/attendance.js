@@ -16,11 +16,11 @@ let lastClockOut = null;
 
 function renderAttendance() {
     if (lastClockIn && lastClockOut) {
-        showAttendance(`本日の出勤 ${formatTime(lastClockIn)} 退勤 ${formatTime(lastClockOut)}`);
+        showAttendance(`Clock In ${formatTime(lastClockIn)} Clock Out ${formatTime(lastClockOut)}`);
     } else if (lastClockIn) {
-        showAttendance(`本日の出勤 ${formatTime(lastClockIn)} 退勤 未打刻`);
+        showAttendance(`Clock In ${formatTime(lastClockIn)} Clock Out Not Recorded`);
     } else {
-        showAttendance('本日の打刻はありません');
+        showAttendance('No attendance recorded for today.');
     }
 }
 
@@ -33,7 +33,7 @@ async function loadTodayAttendance() {
 
 function formatTime(iso) {
     const d = new Date(iso);
-    return d.toLocaleString('ja-JP', {
+    return d.toLocaleString('en-US', {
         timeZone: 'Asia/Tokyo',
         hour12: false,
         hour: '2-digit',
@@ -47,7 +47,7 @@ async function loadUserRole() {
     const info = await apiRequest('/me');
     if (info.role) {
         currentName = info.name || '';
-        const roleLabel = info.role === 'admin' ? '管理者' : '一般';
+        const roleLabel = info.role === 'admin' ? 'Admin' : 'User';
         document.getElementById('user-role').textContent = roleLabel;
         const link = document.getElementById('dashboard-link');
         if (link) {

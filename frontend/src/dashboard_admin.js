@@ -59,7 +59,7 @@ async function loadUserRole() {
             location.href = 'dashboard_user.html';
             return;
         }
-        document.getElementById('user-role').textContent = '管理者';
+        document.getElementById('user-role').textContent = 'Admin';
     }
 }
 

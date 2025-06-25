@@ -14,7 +14,7 @@ if (window.marked) {
 
 function formatTime(iso) {
     const d = new Date(iso);
-    return d.toLocaleString('ja-JP', {
+    return d.toLocaleString('en-US', {
         timeZone: 'Asia/Tokyo',
         year: 'numeric',
         month: '2-digit',
@@ -28,7 +28,7 @@ function formatTime(iso) {
 async function loadUserRole() {
     const info = await apiRequest('/me');
     if (info.role) {
-        const roleLabel = info.role === 'admin' ? '管理者' : '一般';
+        const roleLabel = info.role === 'admin' ? 'Admin' : 'User';
         document.getElementById('user-role').textContent = roleLabel;
         const link = document.getElementById('dashboard-link');
         if (link) {
@@ -40,7 +40,7 @@ async function loadUserRole() {
 async function submitReport() {
     const content = document.getElementById('report-text').value.trim();
     if (!content) {
-        alert('日報を入力してください');
+        alert('Please enter your daily report.');
         return;
     }
     const res = await apiRequest('/report/', {
@@ -52,23 +52,32 @@ async function submitReport() {
         document.getElementById('report-text').value = '';
         loadReports();
     } else {
-        alert(res.error || '送信に失敗しました');
+        alert(res.error || 'Failed to submit.');
     }
 }
 
-async function loadReports() {
-    const reports = await apiRequest('/reports');
+let allReports = [];
+
+function renderReportsForDate() {
     const container = document.getElementById('reports');
     container.innerHTML = '';
-    if (!Array.isArray(reports)) return;
-    reports.forEach(r => {
-        const div = document.createElement('div');
-        const time = formatTime(r.timestamp);
-        const name = r.name || '';
-        div.innerHTML = `<strong>${name}</strong> <span class="text-sm text-[#637588]">${time}</span><div>` +
-            marked.parse(r.content) + '</div>';
-        container.appendChild(div);
+    const dateStr = document.getElementById('report-date').value;
+    if (!Array.isArray(allReports)) return;
+    allReports.forEach(r => {
+        if (!dateStr || r.timestamp.startsWith(dateStr)) {
+            const div = document.createElement('div');
+            const time = formatTime(r.timestamp);
+            const name = r.name || '';
+            div.innerHTML = `<strong>${name}</strong> <span class="text-sm text-[#637588]">${time}</span><div>` +
+                marked.parse(r.content) + '</div>';
+            container.appendChild(div);
+        }
     });
+}
+
+async function loadReports() {
+    allReports = await apiRequest('/reports');
+    renderReportsForDate();
 }
 
 document.getElementById('submit-report').addEventListener('click', submitReport);
@@ -87,6 +96,12 @@ document.getElementById('logout').addEventListener('click', async () => {
     await apiRequest('/logout', { method: 'POST' });
     location.href = 'login.html';
 });
+
+const dateInput = document.getElementById('report-date');
+if (dateInput) {
+    dateInput.value = new Date().toISOString().slice(0, 10);
+    dateInput.addEventListener('change', renderReportsForDate);
+}
 
 loadReports();
 loadUserRole();

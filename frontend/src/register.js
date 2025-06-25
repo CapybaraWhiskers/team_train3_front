@@ -23,7 +23,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
     if (role === 'admin') {
         const adminPass = document.getElementById('admin-pass').value;
         if (adminPass !== '1') {
-            alert('管理者登録パスワードが違います');
+            alert('Admin registration password is incorrect.');
             return;
         }
     }
@@ -33,9 +33,9 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
         body: JSON.stringify({ name, email, password, role })
     });
     if (res.status === 'registered') {
-        alert('登録完了！ログインしてください。');
+        alert('Registration successful! Please log in.');
         location.href = 'login.html';
     } else {
-        alert(res.error || '登録に失敗しました');
+        alert(res.error || 'Registration failed.');
     }
 });
