@@ -186,6 +186,8 @@ def attendance_today():
             last_in = current_in
             last_out = r["timestamp"]
             current_in = None
+    if current_in and not last_out:
+        last_in = current_in
 
     return jsonify({"clock_in": last_in, "clock_out": last_out})
 

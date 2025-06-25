@@ -73,7 +73,7 @@ loadUserRole();
 
 async function exportCsv() {
     const data = await apiRequest('/dashboard');
-    let csv = 'Employee Name,Total Hours,Utilization Rate\n';
+    let csv = '\ufeffEmployee Name,Total Hours,Utilization Rate\n';
     Object.keys(data.totals).sort().forEach(name => {
         const hours = data.totals[name];
         const utilization = Math.round((hours / getMonthlyTargetHours()) * 100);
