@@ -11,15 +11,24 @@ function showAttendance(msg) {
     document.getElementById('attendance-msg').textContent = msg;
 }
 
-async function loadTodayAttendance() {
-    const data = await apiRequest('/attendance/today');
-    if (data.clock_in && data.clock_out) {
-        showAttendance(`本日の出勤 ${formatTime(data.clock_in)} 退勤 ${formatTime(data.clock_out)}`);
-    } else if (data.clock_in) {
-        showAttendance(`本日の出勤 ${formatTime(data.clock_in)} 退勤 未打刻`);
+let lastClockIn = null;
+let lastClockOut = null;
+
+function renderAttendance() {
+    if (lastClockIn && lastClockOut) {
+        showAttendance(`本日の出勤 ${formatTime(lastClockIn)} 退勤 ${formatTime(lastClockOut)}`);
+    } else if (lastClockIn) {
+        showAttendance(`本日の出勤 ${formatTime(lastClockIn)} 退勤 未打刻`);
     } else {
         showAttendance('本日の打刻はありません');
     }
+}
+
+async function loadTodayAttendance() {
+    const data = await apiRequest('/attendance/today');
+    lastClockIn = data.clock_in || null;
+    lastClockOut = data.clock_out || null;
+    renderAttendance();
 }
 
 function formatTime(iso) {
@@ -60,14 +69,19 @@ async function loadMonthlySummary() {
 async function clockIn() {
     const data = await apiRequest('/attendance/clock-in', { method: 'POST' });
     if (data.timestamp) {
-        await loadTodayAttendance();
+        lastClockIn = data.timestamp;
+        lastClockOut = null;
+        renderAttendance();
+        await loadMonthlySummary();
     }
 }
 
 async function clockOut() {
     const data = await apiRequest('/attendance/clock-out', { method: 'POST' });
     if (data.timestamp) {
-        await loadTodayAttendance();
+        lastClockOut = data.timestamp;
+        renderAttendance();
+        await loadMonthlySummary();
     }
 }
 
