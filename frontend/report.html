@@ -19,6 +19,13 @@
         class="min-h-screen flex flex-col bg-white"
         style="font-family: Inter, 'Noto Sans', sans-serif; margin: 0"
     >
+        <div class="lang-switch">
+            <label class="switch">
+                <input type="checkbox" id="lang-toggle-checkbox" />
+                <span class="slider"></span>
+            </label>
+            <span id="lang-toggle-label" class="ml-1">EN</span>
+        </div>
         <div class="flex flex-col grow">
             <header
                 class="flex items-center justify-between border-b border-[#f0f2f4] px-10 py-3"
@@ -51,25 +58,25 @@
                         <a
                             class="text-[#111418] text-sm font-medium"
                             href="attendance.html"
-                            >Attendance</a
+                            data-i18n="nav_attendance">Attendance</a
                         >
                         <a
                             class="text-[#111418] text-sm font-medium"
                             id="dashboard-link"
                             href="dashboard_user.html"
-                            >Dashboard</a
+                            data-i18n="nav_dashboard">Dashboard</a
                         >
                         <a
                             class="text-[#111418] text-sm font-medium"
                             href="report.html"
-                            >Reports</a
+                            data-i18n="nav_reports">Reports</a
                         >
                     </div>
                     <a
                         id="logout"
                         class="text-[#111418] text-sm font-medium"
                         href="#"
-                        >Logout</a
+                        data-i18n="nav_logout">Logout</a
                     >
                 </div>
             </header>
@@ -79,10 +86,10 @@
                         <p
                             class="text-[#111418] text-[32px] font-bold leading-tight min-w-72"
                         >
-                            Daily Report Submission
+                            <span data-i18n="report_heading">Daily Report Submission</span>
                         </p>
                     </div>
-                    <p class="text-[#111418] text-base pb-3 pt-1 px-4">
+                    <p class="text-[#111418] text-base pb-3 pt-1 px-4" data-i18n="report_prompt">
                         Please submit your daily report below. Ensure you have
                         clocked in for the day before submitting.
                     </p>
@@ -101,7 +108,7 @@
                             id="preview"
                             class="flex min-w-[84px] max-w-[480px] items-center justify-center h-10 px-4 rounded-lg bg-[#f0f2f4] text-[#111418] text-sm font-bold"
                         >
-                            <span class="truncate">Preview</span>
+                            <span class="truncate" data-i18n="preview_btn">Preview</span>
                         </button>
                     </div>
                     <div class="flex px-4 py-3 justify-start">
@@ -110,13 +117,13 @@
                             class="flex min-w-[84px] max-w-[480px] items-center justify-center h-10 px-4 rounded-lg bg-[#197fe5] text-white text-sm font-bold"
                             disabled
                         >
-                            <span class="truncate">Submit Report</span>
+                            <span class="truncate" data-i18n="submit_report_btn">Submit Report</span>
                         </button>
                     </div>
                     <h2
                         class="text-[#111418] text-[22px] font-bold tracking-[-0.015em] px-4 pb-3 pt-5"
                     >
-                        Submitted Reports
+                        <span data-i18n="submitted_reports">Submitted Reports</span>
                     </h2>
                     <div class="flex px-4 py-3 gap-2">
                         <input
@@ -124,7 +131,7 @@
                             type="date"
                             class="form-input"
                         />
-                        <span class="self-center">to</span>
+                        <span class="self-center" data-i18n="date_to">to</span>
                         <input id="report-end" type="date" class="form-input" />
                     </div>
                     <div id="reports" class="px-4"></div>
@@ -137,6 +144,7 @@
                 <div id="modal-body"></div>
             </div>
         </div>
+        <script src="src/i18n.js"></script>
         <script src="src/report.js"></script>
     </body>
 </html>

@@ -18,6 +18,13 @@
         class="relative flex min-h-screen flex-col bg-neutral-50 overflow-x-hidden"
         style="font-family: Inter, 'Noto Sans', sans-serif"
     >
+        <div class="lang-switch">
+            <label class="switch">
+                <input type="checkbox" id="lang-toggle-checkbox" />
+                <span class="slider"></span>
+            </label>
+            <span id="lang-toggle-label" class="ml-1">EN</span>
+        </div>
         <div class="layout-container flex h-full grow flex-col">
             <header
                 class="flex items-center justify-between border-b border-[#f0f2f4] px-10 py-3"
@@ -50,25 +57,25 @@
                         <a
                             class="text-[#111418] text-sm font-medium"
                             href="attendance.html"
-                            >Attendance</a
+                            data-i18n="nav_attendance">Attendance</a
                         >
                         <a
                             class="text-[#111418] text-sm font-medium"
                             id="dashboard-link"
                             href="dashboard_user.html"
-                            >Dashboard</a
+                            data-i18n="nav_dashboard">Dashboard</a
                         >
                         <a
                             class="text-[#111418] text-sm font-medium"
                             href="report.html"
-                            >Reports</a
+                            data-i18n="nav_reports">Reports</a
                         >
                     </div>
                     <a
                         id="logout"
                         class="text-[#111418] text-sm font-medium"
                         href="#"
-                        >Logout</a
+                        data-i18n="nav_logout">Logout</a
                     >
                 </div>
             </header>
@@ -81,7 +88,7 @@
                             <p
                                 class="text-[#141414] tracking-light text-[32px] font-bold leading-tight"
                             >
-                                Dashboard
+                                <span data-i18n="nav_dashboard">Dashboard</span>
                             </p>
                             <p
                                 class="text-neutral-500 text-sm font-normal leading-normal"
@@ -97,7 +104,7 @@
                             <p
                                 class="text-[#141414] text-base font-medium leading-normal"
                             >
-                                Total Working Hours
+                                <span data-i18n="total_working_hours">Total Working Hours</span>
                             </p>
                             <p
                                 id="total-hours-value"
@@ -112,7 +119,7 @@
                             <p
                                 class="text-[#141414] text-base font-medium leading-normal"
                             >
-                                Utilization Rate
+                                <span data-i18n="utilization_rate">Utilization Rate</span>
                             </p>
                             <p
                                 id="utilization-rate-value"
@@ -125,7 +132,7 @@
                     <h2
                         class="text-[#141414] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5"
                     >
-                        Monthly Report
+                        <span data-i18n="monthly_report">Monthly Report</span>
                     </h2>
                     <div class="flex flex-wrap gap-4 px-4 py-6">
                         <div
@@ -134,7 +141,7 @@
                             <p
                                 class="text-[#141414] text-base font-medium leading-normal"
                             >
-                                Monthly Working Hours
+                                <span data-i18n="monthly_working_hours">Monthly Working Hours</span>
                             </p>
                             <p
                                 id="monthly-hours"
@@ -146,7 +153,7 @@
                                 <p
                                     class="text-neutral-500 text-base font-normal leading-normal"
                                 >
-                                    This Month
+                                    <span data-i18n="this_month">This Month</span>
                                 </p>
                                 <p
                                     id="monthly-change"
@@ -171,6 +178,7 @@
                 </div>
             </div>
         </div>
+        <script src="src/i18n.js"></script>
         <script src="src/dashboard_user.js"></script>
     </body>
 </html>
