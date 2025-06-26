@@ -108,7 +108,7 @@ async function checkAttendanceAndToggleReport() {
             const warn = document.createElement("div");
             warn.id = "attendance-warning";
             warn.className = "text-red-600 px-4 pb-2";
-            warn.textContent = "You cannot submit a daily report because you have not clocked in today.";
+            warn.textContent = "本日の出勤が記録されていないため、日報を提出できません。";
             reportText.parentNode.insertBefore(warn, reportText);
         }
     } else {
