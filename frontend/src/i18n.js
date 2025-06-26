@@ -27,6 +27,7 @@ const translations = {
 
     report_heading: "Daily Report Submission",
     report_prompt: "Please submit your daily report below. Ensure you have clocked in for the day before submitting.",
+    report_placeholder: "Write your daily report here using Markdown",
     preview_btn: "Preview",
     submit_report_btn: "Submit Report",
     submitted_reports: "Submitted Reports",
@@ -66,6 +67,7 @@ const translations = {
 
     report_heading: "\u65e5\u5831\u306e\u63d0\u51fa",
     report_prompt: "\u4ee5\u4e0b\u306b\u65e5\u5831\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u63d0\u51fa\u524d\u306b\u51fa\u52e4\u3057\u3066\u3044\u308b\u304b\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+    report_placeholder: "Markdown\u5f62\u5f0f\u3067\u65e5\u5831\u3092\u8a18\u5165\u3057\u3066\u304f\u3060\u3055\u3044",
     preview_btn: "\u30d7\u30ec\u30d3\u30e5\u30fc",
     submit_report_btn: "\u9001\u4fe1",
     submitted_reports: "\u63d0\u51fa\u6e08\u307f\u30ec\u30dd\u30fc\u30c8",
