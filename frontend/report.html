@@ -58,25 +58,25 @@
                         <a
                             class="text-[#111418] text-sm font-medium"
                             href="attendance.html"
-                            data-i18n="nav_attendance">Attendance</a
+                            data-en="Attendance" data-ja="勤怠">Attendance</a
                         >
                         <a
                             class="text-[#111418] text-sm font-medium"
                             id="dashboard-link"
                             href="dashboard_user.html"
-                            data-i18n="nav_dashboard">Dashboard</a
+                            data-en="Dashboard" data-ja="ダッシュボード">Dashboard</a
                         >
                         <a
                             class="text-[#111418] text-sm font-medium"
                             href="report.html"
-                            data-i18n="nav_reports">Reports</a
+                            data-en="Reports" data-ja="レポート">Reports</a
                         >
                     </div>
                     <a
                         id="logout"
                         class="text-[#111418] text-sm font-medium"
                         href="#"
-                        data-i18n="nav_logout">Logout</a
+                        data-en="Logout" data-ja="ログアウト">Logout</a
                     >
                 </div>
             </header>
@@ -86,10 +86,10 @@
                         <p
                             class="text-[#111418] text-[32px] font-bold leading-tight min-w-72"
                         >
-                            <span data-i18n="report_heading">Daily Report Submission</span>
+                            <span data-en="Daily Report Submission" data-ja="日報の提出">Daily Report Submission</span>
                         </p>
                     </div>
-                    <p class="text-[#111418] text-base pb-3 pt-1 px-4" data-i18n="report_prompt">
+                    <p class="text-[#111418] text-base pb-3 pt-1 px-4" data-en="Please submit your daily report below. Ensure you have clocked in for the day before submitting." data-ja="以下に日報を入力してください。提出前に出勤しているか確認してください。">
                         Please submit your daily report below. Ensure you have
                         clocked in for the day before submitting.
                     </p>
@@ -97,7 +97,7 @@
                         <label class="flex flex-col min-w-40 w-full">
                             <textarea
                                 id="report-text"
-                                data-i18n="report_placeholder"
+                                data-en="Write your daily report here using Markdown" data-ja="Markdown形式で日報を記入してください"
                                 placeholder="Write your daily report here using Markdown"
                                 class="form-input w-full min-w-0 rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border border-[#dce0e5] bg-white focus:border-[#dce0e5] min-h-60 placeholder:text-[#637588] p-[15px] text-base resize-both overflow-auto"
                                 style="resize: both; min-height: 240px"
@@ -109,7 +109,7 @@
                             id="preview"
                             class="flex min-w-[84px] max-w-[480px] items-center justify-center h-10 px-4 rounded-lg bg-[#f0f2f4] text-[#111418] text-sm font-bold"
                         >
-                            <span class="truncate" data-i18n="preview_btn">Preview</span>
+                            <span class="truncate" data-en="Preview" data-ja="プレビュー">Preview</span>
                         </button>
                     </div>
                     <div class="flex px-4 py-3 justify-start">
@@ -118,13 +118,13 @@
                             class="flex min-w-[84px] max-w-[480px] items-center justify-center h-10 px-4 rounded-lg bg-[#197fe5] text-white text-sm font-bold"
                             disabled
                         >
-                            <span class="truncate" data-i18n="submit_report_btn">Submit Report</span>
+                            <span class="truncate" data-en="Submit Report" data-ja="送信">Submit Report</span>
                         </button>
                     </div>
                     <h2
                         class="text-[#111418] text-[22px] font-bold tracking-[-0.015em] px-4 pb-3 pt-5"
                     >
-                        <span data-i18n="submitted_reports">Submitted Reports</span>
+                        <span data-en="Submitted Reports" data-ja="提出済みレポート">Submitted Reports</span>
                     </h2>
                     <div class="flex px-4 py-3 gap-2">
                         <input
@@ -132,7 +132,7 @@
                             type="date"
                             class="form-input"
                         />
-                        <span class="self-center" data-i18n="date_to">to</span>
+                        <span class="self-center" data-en="to" data-ja="から">to</span>
                         <input id="report-end" type="date" class="form-input" />
                     </div>
                     <div id="reports" class="px-4"></div>
@@ -145,7 +145,7 @@
                 <div id="modal-body"></div>
             </div>
         </div>
-        <script src="src/i18n.js"></script>
+        <script src="src/lang.js"></script>
         <script src="src/report.js"></script>
     </body>
 </html>
