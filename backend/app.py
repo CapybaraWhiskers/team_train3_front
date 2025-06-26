@@ -21,6 +21,42 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "demo-secret-key")
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
 app.secret_key = SECRET_KEY
 
+MESSAGES = {
+    "ja": {
+        "unauthorized": "認証されていません",
+        "missing_fields": "未入力の項目があります",
+        "email_exists": "メールアドレスは既に存在します",
+        "invalid_credentials": "メールアドレスまたはパスワードが間違っています",
+        "registered": "登録完了",
+        "logged_in": "ログインしました",
+        "logged_out": "ログアウトしました",
+        "success": "成功",
+        "clock_in": "出勤しました",
+        "clock_out": "退勤しました",
+    },
+    "en": {
+        "unauthorized": "unauthorized",
+        "missing_fields": "missing fields",
+        "email_exists": "email exists",
+        "invalid_credentials": "invalid credentials",
+        "registered": "registered",
+        "logged_in": "logged in",
+        "logged_out": "logged out",
+        "success": "success",
+        "clock_in": "clocked in",
+        "clock_out": "clocked out",
+    },
+}
+
+
+def get_lang():
+    return request.accept_languages.best_match(["ja", "en"]) or "ja"
+
+
+def t(key: str) -> str:
+    lang = get_lang()
+    return MESSAGES.get(lang, MESSAGES["ja"]).get(key, key)
+
 # Ensure DB directory exists and initialize tables
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 
@@ -107,7 +143,7 @@ def require_login(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         if "user_id" not in session:
-            return jsonify({"error": "unauthorized"}), 401
+            return jsonify({"error": t("unauthorized")}), 401
         return f(*args, **kwargs)
 
     return wrapper
@@ -127,7 +163,7 @@ def register():
     name = data.get("name")
     role = data.get("role")
     if not all([email, password, name, role]):
-        return jsonify({"error": "missing fields"}), 400
+        return jsonify({"error": t("missing_fields")}), 400
     hashed = generate_password_hash(password)
     with get_db() as conn:
         try:
@@ -136,8 +172,8 @@ def register():
                 (email, hashed, name, role),
             )
         except sqlite3.IntegrityError:
-            return jsonify({"error": "email exists"}), 400
-    return jsonify({"status": "registered"})
+            return jsonify({"error": t("email_exists")}), 400
+    return jsonify({"status": "registered", "message": t("registered")})
 
 
 @app.route("/login", methods=["POST"])
@@ -157,9 +193,14 @@ def login():
         session["role"] = row["role"]
         session["email"] = email
         return jsonify(
-            {"status": "logged_in", "name": row["name"], "role": row["role"]}
+            {
+                "status": "logged_in",
+                "name": row["name"],
+                "role": row["role"],
+                "message": t("logged_in"),
+            }
         )
-    return jsonify({"error": "invalid credentials"}), 401
+    return jsonify({"error": t("invalid_credentials")}), 401
 
 
 @app.route("/me", methods=["GET"])
@@ -177,7 +218,7 @@ def me():
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
-    return jsonify({"status": "logged_out"})
+    return jsonify({"status": "logged_out", "message": t("logged_out")})
 
 
 @app.route("/attendance/clock-in", methods=["POST"])
@@ -189,7 +230,12 @@ def clock_in():
             "INSERT INTO attendance (user_id, action, timestamp) VALUES (?, 'in', ?)",
             (session["user_id"], ts),
         )
-    return jsonify({"status": "success", "action": "clock-in", "timestamp": ts})
+    return jsonify({
+        "status": "success",
+        "action": "clock-in",
+        "timestamp": ts,
+        "message": t("clock_in"),
+    })
 
 
 @app.route("/attendance/clock-out", methods=["POST"])
@@ -201,7 +247,12 @@ def clock_out():
             "INSERT INTO attendance (user_id, action, timestamp) VALUES (?, 'out', ?)",
             (session["user_id"], ts),
         )
-    return jsonify({"status": "success", "action": "clock-out", "timestamp": ts})
+    return jsonify({
+        "status": "success",
+        "action": "clock-out",
+        "timestamp": ts,
+        "message": t("clock_out"),
+    })
 
 
 @app.route("/attendance/today", methods=["GET"])
@@ -244,7 +295,7 @@ def add_report():
             "INSERT INTO reports (user_id, content, timestamp) VALUES (?, ?, ?)",
             (session["user_id"], content, ts),
         )
-    return jsonify({"status": "success", "timestamp": ts})
+    return jsonify({"status": "success", "timestamp": ts, "message": t("success")})
 
 
 @app.route("/reports", methods=["GET"])

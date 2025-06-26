@@ -82,7 +82,7 @@ const translations = {
 };
 
 function applyTranslations() {
-  const lang = localStorage.getItem('lang') || 'en';
+  const lang = localStorage.getItem('lang') || 'ja';
   document.documentElement.lang = lang;
   const checkbox = document.getElementById('lang-toggle-checkbox');
   const label = document.getElementById('lang-toggle-label');
