@@ -15,6 +15,13 @@
         <link rel="stylesheet" href="src/style.css" />
     </head>
     <body>
+        <div class="lang-switch">
+            <label class="switch">
+                <input type="checkbox" id="lang-toggle-checkbox" />
+                <span class="slider"></span>
+            </label>
+            <span id="lang-toggle-label" class="ml-1">EN</span>
+        </div>
         <div
             class="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden"
             style="font-family: Inter, 'Noto Sans', sans-serif"
@@ -51,24 +58,24 @@
                             <a
                                 class="text-[#111418] text-sm font-medium"
                                 href="attendance.html"
-                                >Attendance</a
+                                data-i18n="nav_attendance">Attendance</a
                             >
                             <a
                                 class="text-[#111418] text-sm font-medium"
                                 href="dashboard_admin.html"
-                                >Dashboard</a
+                                data-i18n="nav_dashboard">Dashboard</a
                             >
                             <a
                                 class="text-[#111418] text-sm font-medium"
                                 href="report.html"
-                                >Reports</a
+                                data-i18n="nav_reports">Reports</a
                             >
                         </div>
                         <a
                             id="logout"
                             class="text-[#111418] text-sm font-medium"
                             href="#"
-                            >Logout</a
+                            data-i18n="nav_logout">Logout</a
                         >
                     </div>
                 </header>
@@ -81,10 +88,11 @@
                                 <p
                                     class="text-[#111418] tracking-light text-[32px] font-bold leading-tight"
                                 >
-                                    Attendance Overview
+                                    <span data-i18n="admin_overview_title">Attendance Overview</span>
                                 </p>
                                 <p
                                     class="text-[#637588] text-sm font-normal leading-normal"
+                                    data-i18n="admin_overview_desc"
                                 >
                                     Current month's attendance records for all
                                     employees.
@@ -101,17 +109,17 @@
                                             <th
                                                 class="table-column-120 px-4 py-3 text-left text-[#111418] w-[400px] text-sm font-medium leading-normal"
                                             >
-                                                Employee Name
+                                                <span data-i18n="employee_name">Employee Name</span>
                                             </th>
                                             <th
                                                 class="table-column-360 px-4 py-3 text-left text-[#111418] w-[400px] text-sm font-medium leading-normal"
                                             >
-                                                Total Hours
+                                                <span data-i18n="total_hours">Total Hours</span>
                                             </th>
                                             <th
                                                 class="table-column-480 px-4 py-3 text-left text-[#111418] w-[400px] text-sm font-medium leading-normal"
                                             >
-                                                Utilization Rate
+                                                <span data-i18n="utilization_rate">Utilization Rate</span>
                                             </th>
                                         </tr>
                                     </thead>
@@ -141,13 +149,14 @@
                                 id="export-csv"
                                 class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f2f4] text-[#111418] text-sm font-bold leading-normal tracking-[0.015em]"
                             >
-                                <span class="truncate">Export to CSV</span>
+                                <span class="truncate" data-i18n="export_csv">Export to CSV</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <script src="src/i18n.js"></script>
         <script src="src/dashboard_admin.js"></script>
     </body>
 </html>

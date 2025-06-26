@@ -8,9 +8,16 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
 <body class="bg-white min-h-screen flex flex-col" style='font-family: Inter, "Noto Sans", sans-serif;'>
+    <div class="lang-switch">
+        <label class="switch">
+            <input type="checkbox" id="lang-toggle-checkbox" />
+            <span class="slider"></span>
+        </label>
+        <span id="lang-toggle-label" class="ml-1">EN</span>
+    </div>
     <div class="flex flex-1 justify-center py-5 px-4">
         <div class="w-full max-w-[512px] flex flex-col py-5">
-            <h2 class="text-[#111418] text-[28px] font-bold leading-tight text-center pb-3 pt-5">Welcome to WorkWise</h2>
+            <h2 class="text-[#111418] text-[28px] font-bold leading-tight text-center pb-3 pt-5" data-i18n="register_welcome">Welcome to WorkWise</h2>
             <form id="register-form" class="flex flex-col items-stretch">
                 <div class="flex flex-wrap gap-4 py-3">
                     <label class="flex flex-col flex-1 min-w-40">
@@ -42,13 +49,14 @@
                 </div>
                 <div class="flex justify-center py-3">
                     <button type="submit" class="flex items-center justify-center h-10 px-4 rounded-xl bg-[#197fe5] text-white text-sm font-bold min-w-[84px] max-w-[480px]">
-                        <span class="truncate">Create</span>
+                        <span class="truncate" data-i18n="register_create_btn">Create</span>
                     </button>
                 </div>
             </form>
-            <p class="text-[#6a7581] text-sm text-center underline pb-3 pt-1"><a href="login.html">Back to Login</a></p>
+            <p class="text-[#6a7581] text-sm text-center underline pb-3 pt-1"><a href="login.html" data-i18n="register_back_login">Back to Login</a></p>
         </div>
     </div>
+    <script src="src/i18n.js"></script>
     <script src="src/register.js"></script>
 </body>
 </html>
