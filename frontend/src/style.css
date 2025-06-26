@@ -1,0 +1,25 @@
+body { font-family: Arial, sans-serif; margin: 20px; }
+#attendance-msg { margin-top: 10px; font-weight: bold; }
+#reports div { border-bottom: 1px solid #ccc; padding: 10px 0; }
+.role-label { font-size: 0.8em; color: #555; margin-left: 8px; display: block; }
+table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+th, td { border: 1px solid #ccc; padding: 4px 8px; }
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+         background: rgba(0,0,0,0.5); display: none; justify-content: center;
+         align-items: center; }
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  width: 80%;
+  max-width: 600px;
+  height: 70vh;
+  overflow-y: auto;
+}
+#reports h1 { font-size: 1.5em; margin-top: 0.5em; font-weight: bold; }
+#reports h2 { font-size: 1.25em; margin-top: 0.5em; font-weight: bold; }
+#reports h3 { font-size: 1.1em; margin-top: 0.5em; font-weight: bold; }
+.modal-content h1 { font-size: 1.5em; margin-top: 0.5em; }
+.modal-content h2 { font-size: 1.25em; margin-top: 0.5em; }
+#reports ul, #modal-body ul { list-style: disc; margin-left: 1.5em; }
+#reports ol, #modal-body ol { list-style: decimal; margin-left: 1.5em; }
+.close-button { cursor: pointer; float: right; }
