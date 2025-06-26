@@ -87,10 +87,10 @@ function applyTranslations() {
   const checkbox = document.getElementById('lang-toggle-checkbox');
   const label = document.getElementById('lang-toggle-label');
   if (checkbox) {
-    checkbox.checked = lang === 'ja';
+    checkbox.checked = lang === 'en';
   }
   if (label) {
-    label.textContent = lang === 'ja' ? 'JA' : 'EN';
+    label.textContent = 'EN';
   }
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
@@ -108,7 +108,7 @@ function initLangSwitch() {
   const checkbox = document.getElementById('lang-toggle-checkbox');
   if (checkbox) {
     checkbox.addEventListener('change', () => {
-      const lang = checkbox.checked ? 'ja' : 'en';
+      const lang = checkbox.checked ? 'en' : 'ja';
       localStorage.setItem('lang', lang);
       applyTranslations();
     });
