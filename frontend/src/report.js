@@ -103,14 +103,15 @@ async function checkAttendanceAndToggleReport() {
     if (!clockIn) {
         reportText.disabled = true;
         submitBtn.disabled = true;
-        // 既にメッセージがあれば重複しないように
-        if (!document.getElementById("attendance-warning")) {
-            const warn = document.createElement("div");
+        // 既にメッセージがある場合は更新、無い場合は作成
+        let warn = document.getElementById("attendance-warning");
+        if (!warn) {
+            warn = document.createElement("div");
             warn.id = "attendance-warning";
             warn.className = "text-red-600 px-4 pb-2";
-            warn.textContent = "本日の出勤が記録されていないため、日報を提出できません。";
             reportText.parentNode.insertBefore(warn, reportText);
         }
+        warn.textContent = t('attendance_warning');
     } else {
         reportText.disabled = false;
         // 入力が空の場合は送信ボタンを無効化

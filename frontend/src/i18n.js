@@ -32,6 +32,7 @@ const translations = {
     submit_report_btn: "Submit Report",
     submitted_reports: "Submitted Reports",
     date_to: "to",
+    attendance_warning: "Cannot submit a report because today's attendance is not recorded.",
 
     admin_overview_title: "Attendance Overview",
     admin_overview_desc: "Current month's attendance records for all employees.",
@@ -72,6 +73,7 @@ const translations = {
     submit_report_btn: "\u9001\u4fe1",
     submitted_reports: "\u63d0\u51fa\u6e08\u307f\u30ec\u30dd\u30fc\u30c8",
     date_to: "\u304b\u3089",
+    attendance_warning: "\u672c\u65e5\u306e\u51fa\u52e4\u304c\u8a18\u9332\u3055\u308c\u3066\u3044\u306a\u3044\u305f\u3081\u3001\u65e5\u5831\u3092\u63d0\u51fa\u3067\u304d\u307e\u305b\u3093。",
 
     admin_overview_title: "\u52e4\u6020\u6982\u8981",
     admin_overview_desc: "\u4eca\u6708\u306e\u5168\u5de5\u54e1\u306e\u52e4\u6020\u8a18\u9332\u3067\u3059\u3002",
@@ -80,6 +82,11 @@ const translations = {
     export_csv: "CSV\u51fa\u529b"
   }
 };
+
+function t(key) {
+  const lang = localStorage.getItem('lang') || 'ja';
+  return translations[lang][key] || key;
+}
 
 function applyTranslations() {
   const lang = localStorage.getItem('lang') || 'ja';
@@ -111,6 +118,9 @@ function initLangSwitch() {
       const lang = checkbox.checked ? 'en' : 'ja';
       localStorage.setItem('lang', lang);
       applyTranslations();
+      if (typeof checkAttendanceAndToggleReport === 'function') {
+        checkAttendanceAndToggleReport();
+      }
     });
   }
   applyTranslations();

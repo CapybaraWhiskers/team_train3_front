@@ -302,19 +302,11 @@ def add_report():
 @require_login
 def list_reports():
     with get_db() as conn:
-        if session.get("role") == "admin":
-            cur = conn.execute(
-                "SELECT r.id, r.user_id, u.name, r.content, r.timestamp "
-                "FROM reports r JOIN users u ON r.user_id = u.id "
-                "ORDER BY r.id DESC"
-            )
-        else:
-            cur = conn.execute(
-                "SELECT r.id, r.user_id, u.name, r.content, r.timestamp "
-                "FROM reports r JOIN users u ON r.user_id = u.id "
-                "WHERE r.user_id=? ORDER BY r.id DESC",
-                (session["user_id"],),
-            )
+        cur = conn.execute(
+            "SELECT r.id, r.user_id, u.name, r.content, r.timestamp "
+            "FROM reports r JOIN users u ON r.user_id = u.id "
+            "ORDER BY r.id DESC"
+        )
         rows = [dict(row) for row in cur.fetchall()]
     return jsonify(rows)
 
