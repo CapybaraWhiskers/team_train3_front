@@ -58,25 +58,25 @@
                         <a
                             class="text-[#111418] text-sm font-medium"
                             href="attendance.html"
-                            data-i18n="nav_attendance">Attendance</a
+                            data-en="Attendance" data-ja="勤怠">Attendance</a
                         >
                         <a
                             class="text-[#111418] text-sm font-medium"
                             id="dashboard-link"
                             href="dashboard_user.html"
-                            data-i18n="nav_dashboard">Dashboard</a
+                            data-en="Dashboard" data-ja="ダッシュボード">Dashboard</a
                         >
                         <a
                             class="text-[#111418] text-sm font-medium"
                             href="report.html"
-                            data-i18n="nav_reports">Reports</a
+                            data-en="Reports" data-ja="レポート">Reports</a
                         >
                     </div>
                     <a
                         id="logout"
                         class="text-[#111418] text-sm font-medium"
                         href="#"
-                        data-i18n="nav_logout">Logout</a
+                        data-en="Logout" data-ja="ログアウト">Logout</a
                     >
                 </div>
             </header>
@@ -86,7 +86,7 @@
                         <p
                             class="text-[#111418] text-[32px] font-bold leading-tight min-w-72"
                         >
-                            <span data-i18n="attendance_heading">Attendance</span>
+                            <span data-en="Attendance" data-ja="勤怠">Attendance</span>
                         </p>
                     </div>
                     <div class="flex justify-center">
@@ -97,13 +97,13 @@
                                 id="clock-in"
                                 class="h-12 px-5 rounded-lg bg-[#197fe5] text-white text-base font-bold min-w-[84px] grow"
                             >
-                                <span class="truncate" data-i18n="clock_in">Clock In</span>
+                                <span class="truncate" data-en="Clock In" data-ja="出勤">Clock In</span>
                             </button>
                             <button
                                 id="clock-out"
                                 class="h-12 px-5 rounded-lg bg-[#f0f2f4] text-[#111418] text-base font-bold min-w-[84px] grow"
                             >
-                                <span class="truncate" data-i18n="clock_out">Clock Out</span>
+                                <span class="truncate" data-en="Clock Out" data-ja="退勤">Clock Out</span>
                             </button>
                         </div>
                     </div>
@@ -114,13 +114,13 @@
                     <h2
                         class="text-[#111418] text-[22px] font-bold tracking-[-0.015em] px-4 pb-3 pt-5"
                     >
-                        <span data-i18n="monthly_summary">Monthly Summary</span>
+                        <span data-en="Monthly Summary" data-ja="月次サマリー">Monthly Summary</span>
                     </h2>
                     <div class="flex flex-wrap gap-4 p-4">
                         <div
                             class="flex flex-col gap-2 min-w-[158px] flex-1 rounded-lg p-6 border border-[#dce0e5]"
                         >
-                            <p class="text-[#111418] text-base font-medium" data-i18n="total_working_hours">
+                            <p class="text-[#111418] text-base font-medium" data-en="Total Working Hours" data-ja="総勤務時間">
                                 Total Working Hours
                             </p>
                             <p
@@ -134,7 +134,7 @@
                 </div>
             </div>
         </div>
-        <script src="src/i18n.js"></script>
+        <script src="src/lang.js"></script>
         <script src="src/attendance.js"></script>
     </body>
 </html>
