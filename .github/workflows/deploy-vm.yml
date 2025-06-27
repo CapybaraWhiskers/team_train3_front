@@ -1,0 +1,23 @@
+name: Deploy to Azure VM via SSH
+
+on:
+  push:
+    branches: [ main ]  # ← 本番用のブランチ名
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: SSH & Deploy to VM
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: azureuser
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd ~/2025teachtraining02
+          git pull
+          docker-compose down
+          docker-compose up -d --build
+
