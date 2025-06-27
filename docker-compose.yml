@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: .env
+    volumes:
+      - ./db:/db
+      - ./frontend:/app/frontend:ro
+    ports:
+      - "5000:5000"  # バックエンドAPI用
+    restart: always
+
+  frontend:
+    image: nginx:alpine
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./ssl/selfsigned.crt:/etc/ssl/certs/selfsigned.crt:ro
+      - ./ssl/selfsigned.key:/etc/ssl/private/selfsigned.key:ro
+    ports:
+      - "443:443"  # https公開
+    depends_on:
+      - backend
+    restart: always

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <title>User Registration</title>
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+        <link
+            rel="stylesheet"
+            as="style"
+            onload="this.rel='stylesheet'"
+            href="https://fonts.googleapis.com/css2?display=swap&family=Inter:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900"
+        />
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link rel="stylesheet" href="src/style.css" />
+    </head>
+    <body
+        class="bg-white min-h-screen flex flex-col"
+        style="font-family: Inter, 'Noto Sans', sans-serif"
+    >
+        <div class="lang-switch" style="margin-top: 15px; margin-right: 33px">
+            <label class="switch">
+                <input type="checkbox" id="lang-toggle-checkbox" />
+                <span class="slider"></span>
+            </label>
+            <span id="lang-toggle-label" class="ml-1">EN</span>
+        </div>
+        <div class="flex flex-1 justify-center py-5 px-4">
+            <div class="w-full max-w-[512px] flex flex-col py-5">
+                <h2
+                    class="text-[#111418] text-[28px] font-bold leading-tight text-center pb-3 pt-5"
+                    data-i18n="register_welcome"
+                >
+                    WorkWiseへようこそ
+                </h2>
+                <form id="register-form" class="flex flex-col items-stretch">
+                    <div class="flex flex-wrap gap-4 py-3">
+                        <label class="flex flex-col flex-1 min-w-40">
+                            <input
+                                type="text"
+                                id="name"
+                                placeholder="Full Name"
+                                class="form-input w-full flex-1 rounded-xl border border-[#dde0e3] h-14 p-[15px] text-base placeholder:text-[#6a7581]"
+                                required
+                            />
+                        </label>
+                    </div>
+                    <div class="flex flex-wrap gap-4 py-3">
+                        <label class="flex flex-col flex-1 min-w-40">
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="Email"
+                                class="form-input w-full flex-1 rounded-xl border border-[#dde0e3] h-14 p-[15px] text-base placeholder:text-[#6a7581]"
+                                required
+                            />
+                        </label>
+                    </div>
+                    <div class="flex flex-wrap gap-4 py-3">
+                        <label class="flex flex-col flex-1 min-w-40">
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Password"
+                                class="form-input w-full flex-1 rounded-xl border border-[#dde0e3] h-14 p-[15px] text-base placeholder:text-[#6a7581]"
+                                required
+                            />
+                        </label>
+                    </div>
+                    <div class="flex flex-wrap gap-4 py-3">
+                        <label class="flex flex-col flex-1 min-w-40">
+                            <select
+                                id="role"
+                                class="form-input w-full flex-1 rounded-xl border border-[#dde0e3] h-14 p-[15px] text-base placeholder:text-[#6a7581]"
+                            >
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div
+                        id="user-pass-container"
+                        class="flex flex-wrap gap-4 py-3"
+                    >
+                        <label class="flex flex-col flex-1 min-w-40">
+                            <input
+                                type="password"
+                                id="user-pass"
+                                placeholder="User Password"
+                                class="form-input w-full flex-1 rounded-xl border border-[#dde0e3] h-14 p-[15px] text-base placeholder:text-[#6a7581]"
+                            />
+                        </label>
+                    </div>
+                    <div
+                        id="admin-pass-container"
+                        class="flex flex-wrap gap-4 py-3 hidden"
+                    >
+                        <label class="flex flex-col flex-1 min-w-40">
+                            <input
+                                type="password"
+                                id="admin-pass"
+                                placeholder="Admin Password"
+                                class="form-input w-full flex-1 rounded-xl border border-[#dde0e3] h-14 p-[15px] text-base placeholder:text-[#6a7581]"
+                            />
+                        </label>
+                    </div>
+                    <div class="flex justify-center py-3">
+                        <button
+                            type="submit"
+                            class="flex items-center justify-center h-10 px-4 rounded-xl bg-[#197fe5] text-white text-sm font-bold min-w-[84px] max-w-[480px]"
+                        >
+                            <span
+                                class="truncate"
+                                data-i18n="register_create_btn"
+                                >作成</span
+                            >
+                        </button>
+                    </div>
+                </form>
+                <p
+                    class="text-[#6a7581] text-sm text-center underline pb-3 pt-1"
+                >
+                    <a href="login.html" data-i18n="register_back_login"
+                        >ログインに戻る</a
+                    >
+                </p>
+            </div>
+        </div>
+        <script src="src/i18n.js"></script>
+        <script src="src/register.js"></script>
+    </body>
+</html>
