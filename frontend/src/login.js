@@ -47,7 +47,9 @@ if (msBtn) {
 }
 
 // ...既存のフォームログイン処理...
-async function apiRequest(path, options) {
+async function apiRequest(path, options = {}) {
+    options.headers = options.headers || {};
+    options.headers['Accept-Language'] = localStorage.getItem('lang') || 'ja';
     const res = await fetch(path, options);
     return res.json();
 }
