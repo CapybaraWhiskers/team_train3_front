@@ -38,7 +38,16 @@ const translations = {
     admin_overview_desc: "Current month's attendance records for all employees.",
     employee_name: "Employee Name",
     total_hours: "Total Hours",
-    export_csv: "Export to CSV"
+    export_csv: "Export to CSV",
+    clock_in_time: "Clock In Time",
+    clock_out_time: "Clock Out Time",
+    hours_worked_month: "Hours Worked (Month)",
+    add_task: "Add Task",
+    edit: "Edit",
+    delete: "Delete",
+    status: "Status",
+    task: "Task",
+    hours_worked: "Hours Worked"
   },
   ja: {
     login_welcome: "WorkFlow\u3078\u3088\u3046\u3053\u305d",
@@ -79,7 +88,16 @@ const translations = {
     admin_overview_desc: "\u4eca\u6708\u306e\u5168\u5de5\u54e1\u306e\u52e4\u6020\u8a18\u9332\u3067\u3059\u3002",
     employee_name: "\u5f93\u696d\u54e1\u540d",
     total_hours: "\u5408\u8a08\u6642\u9593",
-    export_csv: "CSV\u51fa\u529b"
+    export_csv: "CSV\u51fa\u529b",
+    clock_in_time: "\u51fa\u52e4\u6642\u9593",
+    clock_out_time: "\u9000\u52e4\u6642\u9593",
+    hours_worked_month: "\u6708\u9593\u52e4\u52d9\u6642\u9593",
+    add_task: "\u30bf\u30b9\u30af\u8ffd\u52a0",
+    edit: "\u7de8\u96c6",
+    delete: "\u524a\u9664",
+    status: "\u72b6\u614b",
+    task: "\u30bf\u30b9\u30af",
+    hours_worked: "\u52e4\u52d9\u6642\u9593"
   }
 };
 

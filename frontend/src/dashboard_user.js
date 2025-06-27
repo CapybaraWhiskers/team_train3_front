@@ -68,14 +68,14 @@ async function loadDashboard() {
     let header = "<tr>";
     if (currentRole === "admin") {
         header +=
-            '<th class="px-4 py-3 text-left text-[#111418] font-medium">Employee Name</th>';
+            '<th class="px-4 py-3 text-left text-[#111418] font-medium" data-i18n="employee_name">Employee Name</th>';
     }
     header +=
-        '<th class="px-4 py-3 text-left text-[#111418] font-medium">Clock In</th>';
+        '<th class="px-4 py-3 text-left text-[#111418] font-medium" data-i18n="clock_in">Clock In</th>';
     header +=
-        '<th class="px-4 py-3 text-left text-[#111418] font-medium">Clock Out</th>';
+        '<th class="px-4 py-3 text-left text-[#111418] font-medium" data-i18n="clock_out">Clock Out</th>';
     header +=
-        '<th class="px-4 py-3 text-left text-[#111418] font-medium">Hours Worked</th>';
+        '<th class="px-4 py-3 text-left text-[#111418] font-medium" data-i18n="hours_worked">Hours Worked</th>';
     if (currentRole === "admin") {
         header +=
             '<th class="px-4 py-3 text-left text-[#111418] font-medium">Monthly Total</th>';
@@ -110,6 +110,9 @@ async function loadDashboard() {
     });
     table.appendChild(tbody);
     container.appendChild(table);
+    if (typeof applyTranslations === 'function') {
+        applyTranslations();
+    }
 
     // calculate metrics
     const totalHours = Object.values(data.totals).reduce((a, b) => a + b, 0);

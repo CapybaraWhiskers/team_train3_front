@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&family=Inter:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900"
+    />
     <link rel="stylesheet" href="src/style.css" />
 
     <title>Attendance</title>
@@ -9,7 +15,7 @@
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   </head>
-  <body>
+  <body class="relative flex min-h-screen flex-col bg-neutral-50 overflow-x-hidden" style="font-family: Inter, 'Noto Sans', sans-serif">
     <div class="lang-switch" style="margin-top: 45px; margin-right: 33px">
       <label class="switch">
         <input type="checkbox" id="lang-toggle-checkbox" />
@@ -19,7 +25,7 @@
     </div>
     <div
       class="relative flex size-full min-h-screen flex-col bg-neutral-50 group/design-root overflow-x-hidden"
-      style="--checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(250,250,250)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e'); font-family: Inter, &quot;Noto Sans&quot;, sans-serif;"
+      style="--checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(250,250,250)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e');"
     >
       <div class="layout-container flex h-full grow flex-col">
         <header class="flex items-center justify-between border-b border-[#f0f2f4] px-10 py-3">
@@ -68,15 +74,15 @@
             </div>
             <div class="flex flex-wrap gap-4 p-4">
               <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 border border-[#dbdbdb]">
-                <p class="text-[#141414] text-base font-medium leading-normal">Clock In Time</p>
+                <p class="text-[#141414] text-base font-medium leading-normal" data-i18n="clock_in_time">Clock In Time</p>
                 <p id="attendance-msg" class="text-[#141414] tracking-light text-2xl font-bold leading-tight">9:00 AM</p>
               </div>
               <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 border border-[#dbdbdb]">
-                <p class="text-[#141414] text-base font-medium leading-normal">Clock Out Time</p>
+                <p class="text-[#141414] text-base font-medium leading-normal" data-i18n="clock_out_time">Clock Out Time</p>
                 <p id="monthly-hours" class="text-[#141414] tracking-light text-2xl font-bold leading-tight">5:00 PM</p>
               </div>
               <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 border border-[#dbdbdb]">
-                <p class="text-[#141414] text-base font-medium leading-normal">Hours Worked (Month)</p>
+                <p class="text-[#141414] text-base font-medium leading-normal" data-i18n="hours_worked_month">Hours Worked (Month)</p>
                 <p id="monthly-summary" class="text-[#141414] tracking-light text-2xl font-bold leading-tight">0h 0m</p>
               </div>
             </div>
@@ -85,17 +91,17 @@
                 <button
                   class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-black text-neutral-50 text-sm font-bold leading-normal tracking-[0.015em]"
                 >
-                  <span class="truncate">Add Task</span>
+                  <span class="truncate" data-i18n="add_task">Add Task</span>
                 </button>
                 <button
                   class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#ededed] text-[#141414] text-sm font-bold leading-normal tracking-[0.015em]"
                 >
-                  <span class="truncate">Edit</span>
+                  <span class="truncate" data-i18n="edit">Edit</span>
                 </button>
                 <button
                   class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#ededed] text-[#141414] text-sm font-bold leading-normal tracking-[0.015em]"
                 >
-                  <span class="truncate">Delete</span>
+                  <span class="truncate" data-i18n="delete">Delete</span>
                 </button>
               </div>
             </div>
@@ -104,8 +110,8 @@
                 <table class="flex-1">
                   <thead>
                     <tr class="bg-neutral-50">
-                      <th class="table-920539b3-9f45-44c8-b0b4-e2c43ca80026-column-56 px-4 py-3 text-left text-[#141414] w-[120px] text-sm font-medium leading-normal">Status</th>
-                      <th class="table-920539b3-9f45-44c8-b0b4-e2c43ca80026-column-176 px-4 py-3 text-left text-[#141414] w-[400px] text-sm font-medium leading-normal">Task</th>
+                      <th class="table-920539b3-9f45-44c8-b0b4-e2c43ca80026-column-56 px-4 py-3 text-left text-[#141414] w-[120px] text-sm font-medium leading-normal" data-i18n="status">Status</th>
+                      <th class="table-920539b3-9f45-44c8-b0b4-e2c43ca80026-column-176 px-4 py-3 text-left text-[#141414] w-[400px] text-sm font-medium leading-normal" data-i18n="task">Task</th>
                     </tr>
                   </thead>
                   <tbody>
